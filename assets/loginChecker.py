@@ -1,8 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException,StaleElementReferenceException
 from string import ascii_lowercase
 import json, time, math, sys
 
+# star timer
+startTime = time.perf_counter()
 # Get a set of strings to search through
 try:
     letters = open('letter_combos.txt','r') # Open File
@@ -37,13 +42,13 @@ options.add_argument("--test-type")
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(options=options,executable_path='C:/Users/apett/chromedriver.exe')
 driver.get(url)
-text_area = driver.find_element(By.ID,'search_word')
-searchButton = driver.find_element(By.ID,'view_directory')  
 
 people = []                                   # Empty python list
 parsed = 0
+scanned = 0
 breakout = False
 keys = json.loads(database.pop(0))
+letterString = ''
 
 for x in database:
     people.append(json.loads(x))
@@ -107,66 +112,115 @@ def addPerson(person):
         if keys[r] > i:
             keys[r] += 1
 
+### debug 
+# wait = WebDriverWait(driver, 0.5)
+# text_area = wait.until(EC.presence_of_element_located((By.ID, "search_word")))
+# searchButton = driver.find_element(By.ID, "view_directory")
+# text_area.clear()                               
+# text_area.send_keys('all')
+# searchButton.click()
+# time.sleep(0.25)
+# rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="campus_directory_content_search_results"]/div/div/ul')))
+# for cell in rows:
+#    cell.click()
+# rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="campus_directory_content_search_results"]/div/div/ul')))
+# for cell in rows:
+#     try:
+#         text = cell.text.split('\n')
+#         if '(' in text[0]:
+#             name = text[0].split('(')[0]
+#             role = text[0].split('(')[-1][:-1]
+#             if role[0] == 's' or role[0] == 'f':
+#                 if knowPerson(name,role):
+#                     if role == 'student':
+#                         person = {
+#                             'name':name,
+#                             'role':role,
+#                             'email':text[1].split(': ')[1],
+#                         }
+#                     else:
+#                         person = {
+#                             'name':name,
+#                             'role':role,
+#                             'title':text[1].split(': ')[1],
+#                             'department':text[2].split(': ')[1],
+#                             'office':text[3].split(': ')[1],
+#                             'phone':text[4].split(': ')[1],
+#                             'email':text[5].split(': ')[1],
+#                         }
+#     except:
+#         print(text)
+#         break
+# driver.close()
+# sys.exit()
+
+wait = WebDriverWait(driver, 0.5)
 print('Starting search')
-for j in strings[100:500]:                           # Loop through directory pages
+loopStart = 500
+loopEnd = len(strings)-1
+h = loopStart
+while h < loopEnd:                           # Loop through directory pages
+    j = strings[h]
     if breakout:
         break
-    text_area.clear()                               
-    text_area.send_keys(j)                      # Enter the first string
-    searchButton.click()                            # Click button
-    time.sleep(0.1)
-    rows = len(driver.find_elements(By.XPATH,'//*[@id="campus_directory_content_search_results"]/div'))
-    for i in range(rows):
-        cell = driver.find_elements(By.XPATH,'//*[@id="campus_directory_content_search_results"]/div/div/ul')[i]
-        fullName = cell.find_element(By.TAG_NAME,'h4')
-        spans = cell.find_elements(By.TAG_NAME,'span')
-        try:
-            if len(spans) > 1 and len(spans[0].text) > 1: 
-                if spans[0].text[0] == '(':
-                    name = fullName.text.split('(')[0]
-                    role = spans[0].text[1:-1]
-                    if role[0] == 's' or role[0] == 'f':
-                        if knowPerson(name,role):
-                            cell.click()
-                            if role == 'student':
-                                person = {
-                                    'name':name,
-                                    'role':role,
-                                    'email':spans[2].text,
-                                }
-                            else:
-                                if spans[7].text[0] == 'r':
-                                    person = {
-                                        'name':name,
-                                        'role':role,
-                                        'title':spans[2].text,
-                                        'department':spans[4].text,
-                                        'office':spans[6].text + spans[7].text,
-                                        'phone':spans[9].text,
-                                        'email':spans[11].text,
-                                    }
-                                else:
-                                    person = {
-                                        'name':name,
-                                        'role':role,
-                                        'title':spans[2].text,
-                                        'department':spans[4].text,
-                                        'office':spans[6].text,
-                                        'phone':spans[8].text,
-                                        'email':spans[10].text,
-                                    }
-                            addPerson(person)
-                            parsed = parsed + 1
-        except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            print("Encountered an error: "+ repr(e))
-            print("On string: " + j + ", Name: " + name + ", On line: " + str(exc_tb.tb_lineno))
-            print('Spans:')
-            for s in spans:
-                print('['+s.text+']')
-            print('Quitting')
-            breakout = True
-            break
+    text_area = driver.find_element(By.ID, "search_word")
+    searchButton = driver.find_element(By.ID, "view_directory")
+    letterString = j
+    try:
+        text_area.clear()                               
+        text_area.send_keys(j)
+        searchButton.click()
+        time.sleep(0.2)
+        rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="campus_directory_content_search_results"]/div/div/ul')))
+        for cell in rows:
+            text = cell.text.split('\n')
+            if '(' in text[0]:
+                name = text[0].split('(')[0]
+                role = text[0].split('(')[-1][:-1]
+                if role[0] == 's' or role[0] == 'f':
+                    if knowPerson(name,role):
+                        cell.click()
+        time.sleep(0.2)
+        rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="campus_directory_content_search_results"]/div/div/ul')))
+        for cell in rows:
+            scanned += 1
+            text = cell.text.split('\n')
+            if '(' in text[0]:
+                name = text[0].split('(')[0]
+                role = text[0].split('(')[-1][:-1]
+                if role[0] == 's' or role[0] == 'f':
+                    if knowPerson(name,role) and len(text) > 1:
+                        if role == 'student':
+                            person = {
+                                'name':name,
+                                'role':role,
+                                'email':text[1].split(': ')[1],
+                            }
+                        else:
+                            person = {
+                                'name':name,
+                                'role':role,
+                                'title':text[1].split(': ')[1],
+                                'department':text[2].split(': ')[1],
+                                'office':text[3].split(': ')[1],
+                                'phone':text[4].split(': ')[1],
+                                'email':text[5].split(': ')[1],
+                            }
+                        addPerson(person)
+                        parsed = parsed + 1
+        h += 1
+    except TimeoutException:
+        pass
+        h += 1
+    except StaleElementReferenceException:
+        pass
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print("Encountered an error: "+ repr(e))
+        print("On line: " + str(exc_tb.tb_lineno))
+        print('Quitting')
+        breakout = True
+        break
 
 
 print('Saving file')
@@ -175,8 +229,12 @@ outFile = open('cua_people.txt','w')
 for y in people:
     outFile.write(json.dumps(y)+'\n')
 
-print("Found " + str(parsed) + " people.")
+# stop timer
+endTime = time.perf_counter()
+print("Ended on letter " + letterString + ", line " + str(strings.index(letterString)))
+print("Scanned " + str(scanned) + " profiles.")
+print("Found " + str(parsed) + " new people.")
+print("Ran for " + str(round(endTime-startTime,2)) + " seconds.")
 
 outFile.close()
-letters.close()
 driver.quit()
