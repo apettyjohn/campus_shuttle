@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
-import 'map.dart';
+import 'views/login.dart';
+import 'views/map.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,14 +11,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Login',
       routes: {
         '/login': (context) => const LoginPage(),
         '/map': (context) => const MapScreen(),
       },
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.red,
+          textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Lora')),
       home: const LoginPage(),
     );
   }
