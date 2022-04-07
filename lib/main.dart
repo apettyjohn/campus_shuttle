@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'views/login.dart';
 import 'views/map.dart';
+import 'views/driverpage.dart';
+import 'views/requestPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/map': (context) => const MapScreen(),
+        '/driver': (context) => const DriverPage(),
+        '/request': (context) => const RequestSentPage(),
       },
       theme: ThemeData(
           primarySwatch: Colors.red,

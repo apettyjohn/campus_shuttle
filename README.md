@@ -5,8 +5,7 @@ It is a flutter application that manages the rides on the CUA
 campus shuttle.
 
 ## Getting Started
-
-The web version can be found at: https://apettyjohn.github.io/campus_shuttle/
+Web app prievew at https://apettyjohn.github.io/shuttle_preview/
 
 ### Collaborators
 Ben, Mary Margaret, Cheima

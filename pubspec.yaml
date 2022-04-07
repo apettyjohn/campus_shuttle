@@ -54,6 +54,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -77,9 +78,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: TimesNewRoman
+    - family: Times
       fonts:
-        - asset: assets/text/times-new-roman.ttf
+        - asset: assets/text/times.ttf
           weight: 400
     - family: Lora
       fonts:

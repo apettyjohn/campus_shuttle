@@ -9,9 +9,12 @@ class Footer extends StatelessWidget {
       height: 75,
       color: Colors.red[900],
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           _FooterItem('About'),
+          SizedBox(
+            width: 100,
+          ),
           _FooterItem('Contact'),
         ],
       ),
