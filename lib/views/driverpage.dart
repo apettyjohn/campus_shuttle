@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:campus_shuttle/widgets/driverpage/ridelist.dart';
-
-int estWaitTime = 10;
+import 'package:campus_shuttle/widgets/driverpage/rideList.dart';
 
 final List rides = [
   ['Opus Hall', 'Pryzbyla', 4],
@@ -27,24 +23,21 @@ class _DriverPageState extends State<DriverPage> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        toolbarHeight: 70,
+        toolbarHeight: 80,
         backgroundColor: Colors.red[900],
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(width: 11),
             Padding(
-              padding: const EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: SizedBox(
-                height: 50,
-                child: Image.asset('lib/icons/cua.png'),
+                height: 60,
+                child: Image.asset('assets/images/cuaLogo.png'),
               ),
             ),
             const Text(
               'Campus Shuttle',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Times',
                 fontSize: 26,
               ),
             ),
@@ -52,31 +45,20 @@ class _DriverPageState extends State<DriverPage> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Rides:',
               style: TextStyle(
-                fontFamily: 'Times',
                 fontSize: 32,
                 color: Colors.blueGrey.shade900,
               ),
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: rides.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return Ride(
-                  pickup: rides[index][0],
-                  dropoff: rides[index][1],
-                  passenger: rides[index][2],
-                  index: index,
-                );
-              },
-            ),
+            child: RideList(rides: rides),
           ),
         ],
       ),

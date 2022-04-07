@@ -13,7 +13,7 @@ class Header extends StatelessWidget {
         children: [
           SizedBox(
             height: 80,
-            child: Image.asset('../../../assets/images/cuaLogo.png'),
+            child: Image.asset('assets/images/cuaLogo.png'),
           ),
           Row(
             mainAxisSize: MainAxisSize.min,

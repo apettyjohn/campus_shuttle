@@ -28,7 +28,11 @@ class _LoginBoxState extends State<LoginBox> {
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(20)),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/map');
+                  if (driver) {
+                    Navigator.pushNamed(context, '/driver');
+                  } else {
+                    Navigator.pushNamed(context, '/map');
+                  }
                 },
                 child: const Padding(
                     padding:

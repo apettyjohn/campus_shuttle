@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'driverpage.dart';
+import 'driverPage.dart';
 import 'requestPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -263,7 +263,8 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 25),
-                    TextButton(//REQUEST BUTTON
+                    TextButton(
+                      //REQUEST BUTTON
                       child: Container(
                         padding: const EdgeInsets.only(
                             left: 50, right: 50, top: 8, bottom: 8),
@@ -299,7 +300,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding:
-              const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -324,7 +325,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Text(
-                      estWaitTime.toString() + ' min',
+                      '10 min',
                       style: TextStyle(
                         fontFamily: 'Times',
                         fontSize: 40,
@@ -381,7 +382,7 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(width:12),
+                SizedBox(width: 12),
                 const Text(
                   'Driver? ',
                   style: TextStyle(
@@ -391,9 +392,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => const DriverPage())
-                    );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DriverPage()));
                   },
                   child: Text(
                     'Login',

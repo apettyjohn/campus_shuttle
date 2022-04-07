@@ -1,7 +1,4 @@
-//REQUEST SENT PAGE
 import 'package:flutter/material.dart';
-
-import 'driverpage.dart';
 
 class RequestSentPage extends StatefulWidget {
   const RequestSentPage({Key? key}) : super(key: key);
@@ -116,7 +113,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
                         child: TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                            MaterialStateProperty.all(Colors.transparent),
+                                MaterialStateProperty.all(Colors.transparent),
                           ), //REQUEST BUTTON
                           child: Container(
                             padding: const EdgeInsets.only(
@@ -143,7 +140,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) =>
-                                const ConfirmCancel());
+                                    const ConfirmCancel());
                           },
                         ),
                       ),
@@ -153,7 +150,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
               ),
               Padding(
                 padding:
-                const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -178,7 +175,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
                         ),
                       ),
                       Text(
-                        estWaitTime.toString() + ' min',
+                        '10 min',
                         style: TextStyle(
                           fontFamily: 'Times',
                           fontSize: 40,
@@ -261,9 +258,8 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
                 ),
               ),
               onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName("/requestPage")
-
-                );
+                Navigator.popUntil(
+                    context, ModalRoute.withName("/requestPage"));
               },
             ),
           ],

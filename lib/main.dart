@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'views/login.dart';
 import 'views/map.dart';
-import 'views/driverpage.dart';
+import 'views/driverPage.dart';
 import 'views/requestPage.dart';
 
 void main() => runApp(const MyApp());
