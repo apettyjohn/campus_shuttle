@@ -53,7 +53,10 @@ class _MapScreenState extends State<MapScreen> {
                 // Navigate back to first route when tapped.
                 Navigator.pushNamed(context, '/login');
               },
-              child: const Text('Go back to Login'),
+              child: const Text(
+                'Go back to Login',
+                style: TextStyle(fontSize: 20),
+              ),
             ),
           ),
           Padding(

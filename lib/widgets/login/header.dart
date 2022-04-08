@@ -6,13 +6,14 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 90,
       color: Colors.red[900],
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: 80,
+            height: 70,
             child: Image.asset('assets/images/cuaLogo.png'),
           ),
           Row(
@@ -21,23 +22,14 @@ class Header extends StatelessWidget {
               SizedBox(
                 width: 25,
               ),
-              _HeaderItem("Campus Shuttle")
+              Text(
+                'Campus Shuttle',
+                style: TextStyle(fontSize: 40, color: Colors.white),
+              )
             ],
           )
         ],
       ),
-    );
-  }
-}
-
-class _HeaderItem extends StatelessWidget {
-  final String title;
-  const _HeaderItem(this.title);
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(fontSize: 40, color: Colors.white),
     );
   }
 }

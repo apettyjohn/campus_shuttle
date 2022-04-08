@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:campus_shuttle/widgets/driverpage/rideList.dart';
+import 'package:campus_shuttle/widgets/driver/rideList.dart';
 
 final List rides = [
   ['Opus Hall', 'Pryzbyla', 4],

@@ -10,6 +10,7 @@ class LoginBox extends StatefulWidget {
 class _LoginBoxState extends State<LoginBox> {
   bool driver = false;
   bool admin = false;
+  bool loginError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +23,34 @@ class _LoginBoxState extends State<LoginBox> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         child: Column(
           children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              child: Text("Login", style: TextStyle(fontSize: 30)),
+            ),
             const TextBox(label: 'Name'),
             const TextBox(label: 'Email'),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(20)),
-                onPressed: () {
-                  if (driver) {
-                    Navigator.pushNamed(context, '/driver');
-                  } else {
-                    Navigator.pushNamed(context, '/map');
-                  }
-                },
-                child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 100),
-                    child: Text('Submit'))),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(20)),
+                  onPressed: () {
+                    if (driver) {
+                      Navigator.pushNamed(context, '/driver');
+                    } else if (admin) {
+                      Navigator.pushNamed(context, '/admin');
+                    } else {
+                      Navigator.pushNamed(context, '/requestRide');
+                    }
+                  },
+                  child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(fontSize: 18),
+                      ))),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Row(
@@ -54,7 +67,10 @@ class _LoginBoxState extends State<LoginBox> {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(20),
-                    child: Text('Driver'),
+                    child: Text('Driver', style: TextStyle(fontSize: 18)),
+                  ),
+                  const SizedBox(
+                    width: 50,
                   ),
                   Checkbox(
                     value: admin,
@@ -67,7 +83,7 @@ class _LoginBoxState extends State<LoginBox> {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(20),
-                    child: Text('Admin'),
+                    child: Text('Admin', style: TextStyle(fontSize: 18)),
                   ),
                 ],
               ),
@@ -86,7 +102,7 @@ class TextBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 30),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       child: TextField(
         decoration: InputDecoration(
             border: const OutlineInputBorder(), labelText: label),

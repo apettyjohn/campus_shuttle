@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'viewRide.dart';
+import 'rideDialogue.dart';
 
 class RideList extends StatefulWidget {
   final List rides;

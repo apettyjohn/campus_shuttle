@@ -1,49 +1,47 @@
 import 'package:flutter/material.dart';
+import '../widgets/requestStatus/cancelDialogue.dart';
 
-class RequestSentPage extends StatefulWidget {
-  const RequestSentPage({Key? key}) : super(key: key);
+class RequestStatusPage extends StatefulWidget {
+  const RequestStatusPage({Key? key}) : super(key: key);
 
   @override
-  State<RequestSentPage> createState() => _RequestSentPageState();
+  State<RequestStatusPage> createState() => _RequestStatusPageState();
 }
 
-class _RequestSentPageState extends State<RequestSentPage> {
+class _RequestStatusPageState extends State<RequestStatusPage> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 70,
-          backgroundColor: Colors.red[900],
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: SizedBox(
-                  height: 50,
-                  child: Image.asset('lib/icons/cua.png'),
-                ),
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+        toolbarHeight: 70,
+        backgroundColor: Colors.red[900],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                height: 50,
+                child: Image.asset('assets/images/cuaLogo.png'),
               ),
-              const Text(
-                'Campus Shuttle',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Times',
-                  fontSize: 26,
-                ),
+            ),
+            const Text(
+              'Campus Shuttle',
+              style: TextStyle(
+                fontSize: 26,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: SingleChildScrollView(
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -52,31 +50,28 @@ class _RequestSentPageState extends State<RequestSentPage> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  height: 240,
                   width: 500,
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 13.0),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
                         child: Text(
                           'Success!',
                           style: TextStyle(
-                            fontFamily: 'Times',
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
-                            color: Colors.green[800],
+                            color: Colors.green[700],
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
                           children: [
                             Text(
                               'Your ride has been requested, please be prepared to \nenter the shuttle upon arrival. The shuttle will depart',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontFamily: 'Times',
                                 fontSize: 16,
                                 color: Colors.blueGrey.shade900,
                               ),
@@ -86,9 +81,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
                               children: [
                                 Text(
                                   '2 minutes ',
-                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'Times',
                                     fontSize: 16,
                                     color: Colors.red.shade800,
                                   ),
@@ -96,9 +89,7 @@ class _RequestSentPageState extends State<RequestSentPage> {
                                 const SizedBox(width: 2),
                                 Text(
                                   'after arrival if rider is not ready to board.',
-                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'Times',
                                     fontSize: 16,
                                     color: Colors.blueGrey.shade900,
                                   ),
@@ -109,15 +100,47 @@ class _RequestSentPageState extends State<RequestSentPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         child: TextButton(
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.transparent),
                           ), //REQUEST BUTTON
                           child: Container(
-                            padding: const EdgeInsets.only(
-                                left: 30, right: 30, top: 8, bottom: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.green[100],
+                              border: Border.all(
+                                color: Colors.green.shade900,
+                                width: 4,
+                              ),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: const Text(
+                              'View Map',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/map');
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                          ), //REQUEST BUTTON
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 8),
                             decoration: BoxDecoration(
                               color: Colors.red[100],
                               border: Border.all(
@@ -126,13 +149,12 @@ class _RequestSentPageState extends State<RequestSentPage> {
                               ),
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Cancel Ride',
                               style: TextStyle(
-                                fontFamily: 'Times',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
-                                color: Colors.red.shade900,
+                                color: Colors.red,
                               ),
                             ),
                           ),
@@ -168,7 +190,6 @@ class _RequestSentPageState extends State<RequestSentPage> {
                         child: Text(
                           'Current Estimated Wait Time:',
                           style: TextStyle(
-                            fontFamily: 'Times',
                             fontSize: 27,
                             color: Colors.blueGrey.shade900,
                           ),
@@ -177,7 +198,6 @@ class _RequestSentPageState extends State<RequestSentPage> {
                       Text(
                         '10 min',
                         style: TextStyle(
-                          fontFamily: 'Times',
                           fontSize: 40,
                           color: Colors.red.shade900,
                         ),
@@ -188,81 +208,6 @@ class _RequestSentPageState extends State<RequestSentPage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-//CONFIRM CANCEL
-class ConfirmCancel extends StatefulWidget {
-  const ConfirmCancel({Key? key}) : super(key: key);
-
-  @override
-  State<ConfirmCancel> createState() => _ConfirmCancelState();
-}
-
-class _ConfirmCancelState extends State<ConfirmCancel> {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.transparent,
-      content: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.blueGrey.shade900,
-            width: 3,
-          ),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        height: 155,
-        width: 500,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Text(
-                'Confirm Cancel?',
-                style: TextStyle(
-                  fontFamily: 'Times',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.blueGrey.shade900,
-                ),
-              ),
-            ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              ),
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 50, right: 50, top: 8, bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  border: Border.all(
-                    color: Colors.red.shade900,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontFamily: 'Times',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color: Colors.red.shade900,
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.popUntil(
-                    context, ModalRoute.withName("/requestPage"));
-              },
-            ),
-          ],
         ),
       ),
     );
