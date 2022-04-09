@@ -8,10 +8,9 @@ except:
 txtStrings = file.read().splitlines()
 file.close()
 
-output = {'keys':json.loads(txtStrings[0]),'people':[]}
+output = {'keys':[json.loads(txtStrings[0])],'people':[]}
 for line in txtStrings[1:]:
     output['people'].append(json.loads(line))
-
 try:
     outFile = open('cua_people.json','w')
 except:

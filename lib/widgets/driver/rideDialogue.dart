@@ -66,7 +66,7 @@ class _ViewRideState extends State<ViewRide> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 20, 0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(

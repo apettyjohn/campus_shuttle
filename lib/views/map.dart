@@ -51,11 +51,14 @@ class _MapScreenState extends State<MapScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Navigate back to first route when tapped.
-                Navigator.pushNamed(context, '/login');
+                Navigator.pushNamed(context, '/requestRide');
               },
-              child: const Text(
-                'Go back to Login',
-                style: TextStyle(fontSize: 20),
+              child: const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  'Go back to Request page',
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ),
           ),

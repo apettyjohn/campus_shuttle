@@ -99,7 +99,7 @@ class _RideState extends State<Ride> {
                     ),
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(

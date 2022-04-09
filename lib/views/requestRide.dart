@@ -15,6 +15,9 @@ class _RequestRidePageState extends State<RequestRidePage> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () => Navigator.pushNamed(context, '/login'),
+        ),
         toolbarHeight: 70,
         backgroundColor: Colors.red[900],
         title: Row(

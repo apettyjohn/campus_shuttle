@@ -70,7 +70,7 @@ class _LocationPickerState extends State<LocationPicker> {
                       child: DropdownButton<String>(
                         value: pickupValue,
                         icon: const Padding(
-                          padding: EdgeInsets.only(left: 55.0),
+                          padding: EdgeInsets.only(left: 15.0),
                           child: Icon(Icons.arrow_downward),
                         ),
                         elevation: 16,
@@ -123,7 +123,7 @@ class _LocationPickerState extends State<LocationPicker> {
                       child: DropdownButton<String>(
                         value: dropoffValue,
                         icon: const Padding(
-                          padding: EdgeInsets.only(left: 55.0),
+                          padding: EdgeInsets.only(left: 15.0),
                           child: Icon(Icons.arrow_downward),
                         ),
                         elevation: 16,
@@ -153,6 +153,9 @@ class _LocationPickerState extends State<LocationPicker> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -176,7 +179,7 @@ class _LocationPickerState extends State<LocationPicker> {
                       child: DropdownButton<int>(
                         value: passengers,
                         icon: const Padding(
-                          padding: EdgeInsets.only(left: 166.0),
+                          padding: EdgeInsets.only(left: 140.0),
                           child: Icon(
                             Icons.arrow_downward,
                           ),

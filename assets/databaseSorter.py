@@ -13,7 +13,7 @@ file.close()
 keys = {'faculty':0,'staff':0,'student':0,"student, staff":0,}
 data = []
 for d in database:
-        data.append(json.loads(d))
+    data.append(json.loads(d))
 try:
     data[0]['student']
     keys = data.pop(0)
@@ -29,7 +29,7 @@ except:
 #         print("Stopped on line " + str(x))
 # sys.exit()
 print('Sorting data')
-people = sorted(data,key= lambda x:(x['role'],x['name']))
+people = sorted(data,key= lambda x:(x['role'],x['email']))
 role = people[0]['role']
 keys[role] = 0
 i=0
