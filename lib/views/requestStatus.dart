@@ -39,16 +39,15 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.all(30),
         alignment: Alignment.topCenter,
         child: Container(
           constraints: const BoxConstraints(maxWidth: 600),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Container(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 25),
+              child: Column(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -72,36 +71,29 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: Column(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Your ride has been requested, please be prepared to \nenter the shuttle upon arrival. The shuttle will depart',
+                              Flexible(
+                                  child: RichText(
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.blueGrey.shade900,
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                      fontSize: 16, fontFamily: 'Lora'),
+                                  children: <TextSpan>[
+                                    const TextSpan(
+                                        text:
+                                            'Your ride has been requested, pleased be prepared to enter the shuttle upon arrival. The shuttle will depart '),
+                                    TextSpan(
+                                        text: ' 2 minutes ',
+                                        style:
+                                            TextStyle(color: Colors.red[900])),
+                                    const TextSpan(
+                                        text:
+                                            'after arrival if the rider is not ready to board.'),
+                                  ],
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '2 minutes ',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.red.shade800,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    'after arrival if rider is not ready to board.',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.blueGrey.shade900,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              )),
                             ],
                           ),
                         ),
@@ -175,40 +167,43 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                       ],
                     ),
                   ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.blueGrey.shade900,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
+                  const SizedBox(
+                    height: 25,
                   ),
-                  height: 115,
-                  width: 500,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16, bottom: 5),
-                        child: Text(
-                          'Current Estimated Wait Time:',
-                          style: TextStyle(
-                            fontSize: 27,
-                            color: Colors.blueGrey.shade900,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.blueGrey.shade900,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    height: 115,
+                    width: 500,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Text(
+                            'Estimated Wait Time:',
+                            style: TextStyle(
+                              fontSize: 27,
+                              color: Colors.blueGrey.shade900,
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        '10 min',
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: Colors.red.shade900,
+                        Text(
+                          '10 min',
+                          style: TextStyle(
+                            fontSize: 40,
+                            color: Colors.red.shade900,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
