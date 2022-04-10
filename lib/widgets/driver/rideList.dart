@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'rideDialogue.dart';
 
@@ -109,7 +111,7 @@ class _RideState extends State<Ride> {
                           color: Colors.blueGrey.shade900,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         'Drop-off:',
                         style: TextStyle(
@@ -117,10 +119,9 @@ class _RideState extends State<Ride> {
                           color: Colors.blueGrey.shade900,
                         ),
                       ),
-                      SizedBox(height: 2),
                     ],
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +133,7 @@ class _RideState extends State<Ride> {
                           color: Colors.red.shade900,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         widget.dropoff,
                         style: TextStyle(
@@ -140,7 +141,6 @@ class _RideState extends State<Ride> {
                           color: Colors.red.shade900,
                         ),
                       ),
-                      SizedBox(height: 2),
                     ],
                   ),
                 ],

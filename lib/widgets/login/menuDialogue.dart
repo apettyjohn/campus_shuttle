@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 //CONFIRM CANCEL
@@ -18,7 +20,7 @@ class _LoginMenuState extends State<LoginMenu> {
           color: Colors.white,
           border: Border.all(
             color: Colors.black,
-            width: 3,
+            width: 2,
           ),
           borderRadius: BorderRadius.circular(20),
         ),

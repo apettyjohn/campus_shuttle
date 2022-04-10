@@ -1,5 +1,8 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:campus_shuttle/widgets/requestRide/locationPicker.dart';
+import 'package:campus_shuttle/databaseFunctions.dart';
 
 class RequestRidePage extends StatefulWidget {
   const RequestRidePage({Key? key}) : super(key: key);
@@ -10,6 +13,14 @@ class RequestRidePage extends StatefulWidget {
 
 //HOMEPAGE
 class _RequestRidePageState extends State<RequestRidePage> {
+  late Future<int> waitTime;
+
+  @override
+  void initState() {
+    super.initState();
+    waitTime = getWaitTime();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,47 +65,62 @@ class _RequestRidePageState extends State<RequestRidePage> {
                     height: 20,
                   ),
                   Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.blueGrey.shade900,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.blueGrey.shade900,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                style: const TextStyle(
-                                    fontFamily: 'Lora', fontSize: 16),
-                                children: <TextSpan>[
-                                  const TextSpan(
-                                    text: 'Estimated Wait Time:',
-                                    style: TextStyle(fontSize: 30),
-                                  ),
-                                  TextSpan(
-                                      text: '\n10 min',
-                                      style: TextStyle(
-                                          color: Colors.red[900],
-                                          fontSize: 24)),
-                                  const TextSpan(
-                                      text: '\nNeed special assistance?  '),
-                                  const TextSpan(
-                                      text: 'Tap Here!',
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline,
-                                      )),
-                                ],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Estimated Wait Time:',
+                            style: TextStyle(fontSize: 30),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FutureBuilder<int>(
+                                future: waitTime,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text('${snapshot.data!}',
+                                        style: TextStyle(
+                                            color: Colors.red[900],
+                                            fontSize: 24));
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return const Text('Wait time is empty');
+                                  }
+                                },
                               ),
-                            ),
-                          ],
-                        ),
-                      )),
+                              Text(' min',
+                                  style: TextStyle(
+                                      color: Colors.red[900], fontSize: 24)),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text('Need special assistance?  '),
+                              Text(
+                                'Tap Here!',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -102,5 +128,14 @@ class _RequestRidePageState extends State<RequestRidePage> {
         ),
       ),
     );
+  }
+}
+
+Future<int> getWaitTime() async {
+  var response = await getRequest('waitTime');
+  if (response.statusCode == 200) {
+    return int.parse(response.body);
+  } else {
+    return -1;
   }
 }

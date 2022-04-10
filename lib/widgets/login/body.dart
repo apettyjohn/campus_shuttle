@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:campus_shuttle/databaseFunctions.dart';
 
 class LoginBox extends StatefulWidget {
   const LoginBox({Key? key}) : super(key: key);
@@ -8,9 +11,16 @@ class LoginBox extends StatefulWidget {
 }
 
 class _LoginBoxState extends State<LoginBox> {
-  bool driver = false;
-  bool admin = false;
+  bool driverCheckBox = false;
+  bool driverError = false;
+  bool adminCheckBox = false;
+  bool adminError = false;
+  bool serverError = false;
   bool loginError = false;
+  bool loading = false;
+  String name = '', email = '';
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +37,94 @@ class _LoginBoxState extends State<LoginBox> {
               padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
               child: Text("Login", style: TextStyle(fontSize: 30)),
             ),
-            const TextBox(label: 'Name'),
-            const TextBox(label: 'Email'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: TextField(
+                controller: _nameController,
+                onChanged: (String value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: "Name"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: TextField(
+                controller: _emailController,
+                onChanged: (String value) {
+                  setState(() {
+                    email = value;
+                  });
+                },
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: "Email"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : loginError
+                      ? const Text('* Invalid name or email',
+                          style: TextStyle(color: Colors.red))
+                      : serverError
+                          ? const Text(
+                              '* Server error, try again later',
+                              style: TextStyle(color: Colors.red),
+                            )
+                          : driverError && driverCheckBox
+                              ? const Text(
+                                  '* You are not authorized as a driver',
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : adminError && adminCheckBox
+                                  ? const Text(
+                                      '* You are not authorized as an admin',
+                                      style: TextStyle(color: Colors.red),
+                                    )
+                                  : null,
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(20)),
-                  onPressed: () {
-                    if (driver) {
-                      Navigator.pushNamed(context, '/driver');
-                    } else if (admin) {
-                      Navigator.pushNamed(context, '/admin');
+                  onPressed: () async {
+                    loading = true;
+                    setState(() {});
+                    var request = await postRequest(
+                        'login', {"name": name, "email": email});
+                    if (request.statusCode == 200) {
+                      serverError = false;
+                      driverError = false;
+                      adminError = false;
+                      var body = jsonDecode(request.body);
+                      loginError = !body['valid'];
+                      if (driverCheckBox) {
+                        driverError = !body['driver'];
+                      }
+                      if (adminCheckBox) {
+                        adminError = !body['admin'];
+                      }
                     } else {
-                      Navigator.pushNamed(context, '/requestRide');
+                      serverError = true;
                     }
+                    loading = false;
+                    if (!loginError && !serverError) {
+                      if (!driverError && !adminError) {
+                        if (driverCheckBox) {
+                          Navigator.pushNamed(context, '/driver');
+                        } else if (adminCheckBox) {
+                          Navigator.pushNamed(context, '/admin');
+                        } else {
+                          Navigator.pushNamed(context, '/requestRide');
+                        }
+                      }
+                    }
+                    setState(() {});
                   },
                   child: const Padding(
                       padding:
@@ -57,11 +140,11 @@ class _LoginBoxState extends State<LoginBox> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Checkbox(
-                    value: driver,
+                    value: driverCheckBox,
                     onChanged: (checked) {
                       setState(() {
-                        driver = checked!;
-                        admin = false;
+                        driverCheckBox = checked!;
+                        adminCheckBox = false;
                       });
                     },
                   ),
@@ -73,11 +156,11 @@ class _LoginBoxState extends State<LoginBox> {
                     width: 50,
                   ),
                   Checkbox(
-                    value: admin,
+                    value: adminCheckBox,
                     onChanged: (checked) {
                       setState(() {
-                        admin = checked!;
-                        driver = false;
+                        adminCheckBox = checked!;
+                        driverCheckBox = false;
                       });
                     },
                   ),
@@ -90,22 +173,6 @@ class _LoginBoxState extends State<LoginBox> {
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class TextBox extends StatelessWidget {
-  final String label;
-  const TextBox({Key? key, required this.label}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      child: TextField(
-        decoration: InputDecoration(
-            border: const OutlineInputBorder(), labelText: label),
       ),
     );
   }
