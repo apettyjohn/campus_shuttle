@@ -1,18 +1,25 @@
 // ignore_for_file: file_names
 
+import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 
 //CONFIRM CANCEL
 class ConfirmCancel extends StatefulWidget {
-  const ConfirmCancel({Key? key}) : super(key: key);
+  final Map ride;
+  const ConfirmCancel({Key? key, required this.ride}) : super(key: key);
 
   @override
   State<ConfirmCancel> createState() => _ConfirmCancelState();
 }
 
 class _ConfirmCancelState extends State<ConfirmCancel> {
+  bool loading = false;
+  bool requestError = false;
+
   @override
   Widget build(BuildContext context) {
+    final Map body = widget.ride;
+
     return AlertDialog(
       backgroundColor: Colors.transparent,
       content: Container(
@@ -24,7 +31,7 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
           ),
           borderRadius: BorderRadius.circular(20),
         ),
-        height: 155,
+        height: 200,
         width: 500,
         child: Column(
           children: [
@@ -63,9 +70,31 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
                   ),
                 ),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/requestRide');
+              onPressed: () async {
+                loading = true;
+                setState(() {});
+                var response = await postRequest(
+                    'rides', {"method": "delete", "ride": body});
+                loading = false;
+                if (response.statusCode == 202) {
+                  requestError = false;
+                  Navigator.pushNamed(context, '/requestRide');
+                } else {
+                  requestError = true;
+                }
+                setState(() {});
               },
+            ),
+            Container(
+              padding: const EdgeInsets.only(top: 15),
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : requestError
+                      ? const Text(
+                          'Error',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : null,
             ),
           ],
         ),

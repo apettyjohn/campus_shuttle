@@ -3,25 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-Future<Data> fetchData() async {
-  final response = await http.get(Uri.parse('http://localhost:8000/test'));
-
-  if (response.statusCode == 200) {
-    return Data.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load data');
-  }
-}
-
-class Data {
-  final String name;
-  Data(this.name);
-
-  Data.fromJson(Map<String, dynamic> json) : name = json['name'];
-}
-
-void main() => runApp(const MapScreen());
-
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -30,16 +11,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late Future<Data> futureData;
-
-  @override
-  void initState() {
-    super.initState();
-    futureData = fetchData();
-  }
-
   @override
   Widget build(BuildContext context) {
+    var ride = ModalRoute.of(context)!.settings.arguments as Map;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -49,36 +23,20 @@ class _MapScreenState extends State<MapScreen> {
             color: Colors.red[900],
             height: 75,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Navigate back to first route when tapped.
-                Navigator.pushNamed(context, '/requestRide');
+                Navigator.pushNamed(context, '/requestStatus', arguments: ride);
               },
               child: const Padding(
                 padding: EdgeInsets.all(20),
                 child: Text(
-                  'Go back to Request page',
+                  'Go back to status page',
                   style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(children: [
-              FutureBuilder<Data>(
-                future: futureData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data!.name);
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ]),
-          ),
+          Padding(padding: const EdgeInsets.all(30), child: Text('$ride')),
         ],
       ),
     );

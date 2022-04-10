@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 
 class LocationPicker extends StatefulWidget {
@@ -10,6 +11,8 @@ class LocationPicker extends StatefulWidget {
 }
 
 class _LocationPickerState extends State<LocationPicker> {
+  bool loading = false;
+  bool requestError = false;
   String pickupValue = 'Opus Hall';
   String dropoffValue = 'Pryzbyla';
   int passengers = 1;
@@ -205,8 +208,18 @@ class _LocationPickerState extends State<LocationPicker> {
               ],
             ),
           ),
+          Container(
+            child: loading
+                ? const CircularProgressIndicator()
+                : requestError
+                    ? const Text(
+                        'Error',
+                        style: TextStyle(color: Colors.red),
+                      )
+                    : null,
+          ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: TextButton(
               //REQUEST BUTTON
               child: Container(
@@ -229,8 +242,25 @@ class _LocationPickerState extends State<LocationPicker> {
                   ),
                 ),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/requestStatus');
+              onPressed: () async {
+                loading = true;
+                setState(() {});
+                final body = {
+                  "pickup": pickupValue,
+                  "dropoff": dropoffValue,
+                  "passengers": passengers
+                };
+                var response =
+                    await postRequest('rides', {"method": "add", "ride": body});
+                loading = false;
+                if (response.statusCode == 202) {
+                  requestError = false;
+                  Navigator.pushNamed(context, '/requestStatus',
+                      arguments: body);
+                } else {
+                  requestError = true;
+                }
+                setState(() {});
               },
             ),
           ),

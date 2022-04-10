@@ -1,7 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import '../widgets/requestStatus/cancelDialogue.dart';
+import 'package:campus_shuttle/widgets/requestRide/waitTimeBox.dart';
+import 'package:campus_shuttle/widgets/requestStatus/cancelDialogue.dart';
 
 class RequestStatusPage extends StatefulWidget {
   const RequestStatusPage({Key? key}) : super(key: key);
@@ -13,12 +14,12 @@ class RequestStatusPage extends StatefulWidget {
 class _RequestStatusPageState extends State<RequestStatusPage> {
   @override
   Widget build(BuildContext context) {
+    var ride = ModalRoute.of(context)!.settings.arguments as Map;
+    // print(ride);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => Navigator.pushNamed(context, '/requestRide'),
-        ),
+        automaticallyImplyLeading: false,
         toolbarHeight: 70,
         backgroundColor: Colors.red[900],
         title: Row(
@@ -127,7 +128,8 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/map');
+                              Navigator.pushNamed(context, '/map',
+                                  arguments: ride);
                             },
                           ),
                         ),
@@ -162,7 +164,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      const ConfirmCancel());
+                                      ConfirmCancel(ride: ride));
                             },
                           ),
                         ),
@@ -172,38 +174,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.blueGrey.shade900,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: 115,
-                    width: 500,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            'Estimated Wait Time:',
-                            style: TextStyle(
-                              fontSize: 27,
-                              color: Colors.blueGrey.shade900,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '10 min',
-                          style: TextStyle(
-                            fontSize: 40,
-                            color: Colors.red.shade900,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const WaitTimeBox(helpText: false)
                 ],
               ),
             ),

@@ -36,3 +36,12 @@ Future<Response> postRequest(String route, Map data) async {
     return Response('Error', 500);
   }
 }
+
+Future<int> getWaitTime() async {
+  var response = await getRequest('waitTime');
+  if (response.statusCode == 200) {
+    return int.parse(response.body);
+  } else {
+    return -1;
+  }
+}
