@@ -122,9 +122,12 @@ class _LoginBoxState extends State<LoginBox> {
                         } else {
                           Navigator.pushNamed(context, '/requestRide');
                         }
+                      } else {
+                        setState(() {});
                       }
+                    } else {
+                      setState(() {});
                     }
-                    setState(() {});
                   },
                   child: const Padding(
                       padding:

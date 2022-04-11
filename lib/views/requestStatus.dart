@@ -174,7 +174,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                   const SizedBox(
                     height: 25,
                   ),
-                  const WaitTimeBox(helpText: false)
+                  const WaitTimeBox()
                 ],
               ),
             ),

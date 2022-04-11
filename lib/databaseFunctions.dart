@@ -37,11 +37,42 @@ Future<Response> postRequest(String route, Map data) async {
   }
 }
 
-Future<int> getWaitTime() async {
+Future<int> getWaitTime(int i) async {
   var response = await getRequest('waitTime');
   if (response.statusCode == 200) {
-    return int.parse(response.body);
+    var body = await jsonDecode(response.body);
+    var list = body['times'] as List;
+    if (i < list.length) {
+      return list[i];
+    } else {
+      return -1;
+    }
   } else {
     return -1;
+  }
+}
+
+Future<int> getFullWaitTime() async {
+  var response = await getRequest('waitTime');
+  if (response.statusCode == 200) {
+    var body = await jsonDecode(response.body);
+    int totalTime = 0;
+    for (var time in body['times']) {
+      totalTime += time as int;
+    }
+    return totalTime;
+  } else {
+    return -1;
+  }
+}
+
+Future<List> getRides() async {
+  var response = await getRequest('rides');
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    return [
+      {"passengers": 0}
+    ];
   }
 }

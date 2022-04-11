@@ -1,16 +1,9 @@
 // ignore_for_file: file_names
 
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:campus_shuttle/widgets/driver/rideList.dart';
-
-final List rides = [
-  ['Opus Hall', 'Pryzbyla', 4],
-  ['Pryzbyla', 'Dufour Center', 6],
-  ['Gibbons Hall', 'St. Vincent Chapel', 2],
-  ['Brookland Metro', 'Opus Hall', 5],
-  ['Opus Hall', 'Pryzbyla', 4],
-  ['Pryzbyla', 'Dufour Center', 6],
-];
 
 class DriverPage extends StatefulWidget {
   const DriverPage({Key? key}) : super(key: key);
@@ -20,6 +13,23 @@ class DriverPage extends StatefulWidget {
 }
 
 class _DriverPageState extends State<DriverPage> {
+  late Timer _everySecond;
+  var rides = [];
+
+  Future<void> getRidesWrapper() async {
+    rides = await getRides();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRidesWrapper();
+    _everySecond = Timer.periodic(const Duration(seconds: 5), (Timer t) {
+      getRidesWrapper();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,23 +56,32 @@ class _DriverPageState extends State<DriverPage> {
           ],
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Rides:',
-              style: TextStyle(
-                fontSize: 32,
-                color: Colors.blueGrey.shade900,
+      body: Container(
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
+              child: Text(
+                'Rides:',
+                style: TextStyle(
+                  fontSize: 32,
+                  color: Colors.blueGrey.shade900,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: RideList(rides: rides),
-          ),
-        ],
+            rides.isEmpty
+                ? const Text('No Rides Requested',
+                    style: TextStyle(
+                      fontSize: 24,
+                    ))
+                : rides[0]['passengers'] < 1
+                    ? Text('Server Error',
+                        style: TextStyle(color: Colors.red[900], fontSize: 24))
+                    : RideList(rides: rides),
+          ],
+        ),
       ),
     );
   }

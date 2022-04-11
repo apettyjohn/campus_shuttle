@@ -19,7 +19,7 @@ class _RequestRidePageState extends State<RequestRidePage> {
   @override
   void initState() {
     super.initState();
-    waitTime = getWaitTime();
+    waitTime = getFullWaitTime();
   }
 
   @override

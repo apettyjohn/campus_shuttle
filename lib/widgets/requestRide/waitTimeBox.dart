@@ -4,8 +4,11 @@ import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 
 class WaitTimeBox extends StatefulWidget {
-  final bool helpText;
-  const WaitTimeBox({Key? key, required this.helpText}) : super(key: key);
+  final bool? helpText;
+  final bool? allElements;
+  final int? index;
+  const WaitTimeBox({Key? key, this.helpText, this.allElements, this.index})
+      : super(key: key);
 
   @override
   State<WaitTimeBox> createState() => _WaitTimeBoxState();
@@ -13,17 +16,38 @@ class WaitTimeBox extends StatefulWidget {
 
 class _WaitTimeBoxState extends State<WaitTimeBox> {
   bool helpText = false;
-  late Future<int> waitTime;
+  bool allElements = true;
+  int index = -1;
+  var waitTime = 0;
+
+  Future<void> waitTimeWrapper() async {
+    if (allElements) {
+      waitTime = await getFullWaitTime();
+    } else if (index >= 0) {
+      waitTime = await getWaitTime(index);
+    } else {
+      waitTime = await getWaitTime(0);
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-    waitTime = getWaitTime();
+    waitTimeWrapper();
   }
 
   @override
   Widget build(BuildContext context) {
-    helpText = widget.helpText;
+    if (widget.helpText != null) {
+      helpText = widget.helpText!;
+    }
+    if (widget.index != null) {
+      index = widget.index!;
+    }
+    if (widget.allElements != null) {
+      allElements = widget.allElements!;
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -37,37 +61,31 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Estimated Wait Time:',
-              style: TextStyle(fontSize: 30),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: FutureBuilder<int>(
-                    future: waitTime,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data! < 0) {
-                          return Text('Server Error',
-                              style: TextStyle(
-                                  color: Colors.red[900], fontSize: 26));
-                        }
-                        return Text('${snapshot.data!} min',
-                            style: TextStyle(
-                                color: Colors.red[900], fontSize: 26));
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                  ),
+                const Text(
+                  'Estimated Wait Time:',
+                  style: TextStyle(fontSize: 30),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: IconButton(
+                      onPressed: () async {
+                        await waitTimeWrapper();
+                      },
+                      icon: const Icon(Icons.refresh)),
+                )
               ],
             ),
+            Padding(
+                padding: const EdgeInsets.all(5),
+                child: waitTime < 0
+                    ? Text('Server Error',
+                        style: TextStyle(color: Colors.red[900], fontSize: 26))
+                    : Text('$waitTime min',
+                        style:
+                            TextStyle(color: Colors.red[900], fontSize: 26))),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: helpText
