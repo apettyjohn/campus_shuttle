@@ -123,6 +123,7 @@ class _LoginBoxState extends State<LoginBox> {
                         serverError = true;
                       }
                       loading = false;
+                      setState(() {});
                       if (!loginError && !serverError) {
                         if (!driverError && !adminError) {
                           if (driverCheckBox) {
@@ -139,13 +140,10 @@ class _LoginBoxState extends State<LoginBox> {
                                   "email": email
                                 });
                           }
-                        } else {
-                          setState(() {});
                         }
-                      } else {
-                        setState(() {});
                       }
                     } else {
+                      loading = false;
                       if (driverCheckBox) {
                         Navigator.pushNamed(context, '/driver',
                             arguments: {"server": serverOn});

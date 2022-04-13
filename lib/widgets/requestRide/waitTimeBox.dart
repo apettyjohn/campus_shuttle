@@ -17,7 +17,8 @@ class WaitTimeBox extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<WaitTimeBox> createState() => _WaitTimeBoxState();
+  // ignore: no_logic_in_create_state
+  State<WaitTimeBox> createState() => _WaitTimeBoxState(serverOn: serverOn);
 }
 
 class _WaitTimeBoxState extends State<WaitTimeBox> {
@@ -25,17 +26,28 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
   bool allElements = true;
   int index = -1;
   var waitTime = 0;
-  late bool serverOn;
+  bool serverOn;
 
+  _WaitTimeBoxState({required this.serverOn});
+
+  // update waitTime
   Future<void> waitTimeWrapper() async {
-    if (allElements) {
-      waitTime = await getFullWaitTime();
-    } else if (index >= 0) {
-      waitTime = await getWaitTime(index);
-    } else {
-      waitTime = await getWaitTime(0);
+    if (serverOn) {
+      if (allElements) {
+        waitTime = await getFullWaitTime();
+      } else if (index >= 0) {
+        waitTime = await getWaitTime(index);
+      } else {
+        waitTime = await getWaitTime(0);
+      }
+      setState(() {});
     }
-    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    waitTimeWrapper();
   }
 
   @override
@@ -48,10 +60,6 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
     }
     if (widget.allElements != null) {
       allElements = widget.allElements!;
-    }
-    serverOn = widget.serverOn;
-    if (serverOn) {
-      waitTimeWrapper();
     }
     return Container(
       decoration: BoxDecoration(
@@ -83,10 +91,8 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
                 ),
                 index < 0
                     ? IconButton(
-                        onPressed: () async {
-                          if (serverOn) {
-                            await waitTimeWrapper();
-                          }
+                        onPressed: () {
+                          waitTimeWrapper();
                         },
                         icon: const Icon(Icons.refresh))
                     : Container(),
