@@ -3,10 +3,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
-
-const String baseURL = "http://localhost:8000/";
+import 'package:flutter/foundation.dart';
 
 Uri makeUrl(String route) {
+  String baseURL = "http://localhost:8000/";
+  if (defaultTargetPlatform != TargetPlatform.windows) {
+    baseURL = "http://10.0.2.2:8000/";
+  }
   return Uri.parse(baseURL + route);
 }
 
@@ -18,7 +21,7 @@ Future<Response> getRequest(String route) async {
         headers: {"Content-Type": "application/json"});
     return response;
   } catch (e) {
-    print('Encountered get request error: $e');
+    // print('Encountered get request error: $e');
     return Response('Error', 500);
   }
 }
@@ -32,7 +35,7 @@ Future<Response> postRequest(String route, Map data) async {
         headers: {"Content-Type": "application/json"}, body: body);
     return response;
   } catch (e) {
-    print('Encountered post request error: $e');
+    // print('Encountered post request error: $e');
     return Response('Error', 500);
   }
 }

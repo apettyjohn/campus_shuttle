@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 //CONFIRM CANCEL
 class ConfirmCancel extends StatefulWidget {
-  final Map ride;
-  const ConfirmCancel({Key? key, required this.ride}) : super(key: key);
+  final Map args;
+  const ConfirmCancel({Key? key, required this.args}) : super(key: key);
 
   @override
   State<ConfirmCancel> createState() => _ConfirmCancelState();
@@ -18,7 +18,9 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
 
   @override
   Widget build(BuildContext context) {
-    final Map body = widget.ride;
+    final Map body = widget.args;
+    final Map ride = body['ride'];
+    final Map person = body['person'];
 
     return AlertDialog(
       backgroundColor: Colors.transparent,
@@ -31,7 +33,7 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
           ),
           borderRadius: BorderRadius.circular(20),
         ),
-        height: 200,
+        height: 250,
         width: 500,
         child: Column(
           children: [
@@ -74,11 +76,12 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
                 loading = true;
                 setState(() {});
                 var response = await postRequest(
-                    'rides', {"method": "delete", "ride": body});
+                    'rides', {"method": "delete", "ride": ride});
                 loading = false;
                 if (response.statusCode == 202) {
                   requestError = false;
-                  Navigator.pushNamed(context, '/requestRide');
+                  Navigator.pushNamed(context, '/requestRide',
+                      arguments: person);
                 } else {
                   requestError = true;
                 }

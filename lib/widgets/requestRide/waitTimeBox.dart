@@ -32,12 +32,6 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    waitTimeWrapper();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (widget.helpText != null) {
       helpText = widget.helpText!;
@@ -48,6 +42,7 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
     if (widget.allElements != null) {
       allElements = widget.allElements!;
     }
+    waitTimeWrapper();
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -64,18 +59,25 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Estimated Wait Time:',
-                  style: TextStyle(fontSize: 30),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: index >= 0
+                        ? const Text('Drive Time:',
+                            style: TextStyle(fontSize: 28))
+                        : const Text(
+                            'Estimated Wait Time:',
+                            style: TextStyle(fontSize: 28),
+                          ),
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: IconButton(
-                      onPressed: () async {
-                        await waitTimeWrapper();
-                      },
-                      icon: const Icon(Icons.refresh)),
-                )
+                index < 0
+                    ? IconButton(
+                        onPressed: () async {
+                          await waitTimeWrapper();
+                        },
+                        icon: const Icon(Icons.refresh))
+                    : Container(),
               ],
             ),
             Padding(

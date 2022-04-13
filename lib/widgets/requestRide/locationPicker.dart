@@ -4,7 +4,8 @@ import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 
 class LocationPicker extends StatefulWidget {
-  const LocationPicker({Key? key}) : super(key: key);
+  final Map args;
+  const LocationPicker({Key? key, required this.args}) : super(key: key);
 
   @override
   State<LocationPicker> createState() => _LocationPickerState();
@@ -13,8 +14,9 @@ class LocationPicker extends StatefulWidget {
 class _LocationPickerState extends State<LocationPicker> {
   bool loading = false;
   bool requestError = false;
+  bool serverError = false;
   String pickupValue = 'Opus Hall';
-  String dropoffValue = 'Pryzbyla';
+  String dropoffValue = 'Brookland Metro';
   int passengers = 1;
   List<String> options = [
     'Opus Hall',
@@ -23,249 +25,249 @@ class _LocationPickerState extends State<LocationPicker> {
     'Maloney Hall'
   ];
   List numPassengers = [for (var i = 1; i <= 9; i++) i];
+  double dropdownWidth = 210;
+  Map args = {};
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.blueGrey.shade900,
+    args = widget.args;
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      var width = constraints.maxWidth;
+      width > 400 ? dropdownWidth = 250 : null;
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.blueGrey.shade900,
+          ),
+          borderRadius: BorderRadius.circular(20),
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 25),
-            child: Text(
-              'Request A Ride',
-              style: TextStyle(
-                fontSize: 32,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
-                  child: Text(
-                    'Pickup Location:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blueGrey.shade900,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey.shade300,
-                    ),
-                    child: DropdownButton<String>(
-                      value: pickupValue,
-                      icon: const Padding(
-                        padding: EdgeInsets.only(left: 15.0),
-                        child: Icon(Icons.arrow_downward),
-                      ),
-                      elevation: 16,
-                      underline: Container(
-                        height: 2,
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          pickupValue = newValue!;
-                        });
-                      },
-                      items:
-                          options.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    'Drop-off Location:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blueGrey.shade900,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey.shade300,
-                    ),
-                    child: DropdownButton<String>(
-                      value: dropoffValue,
-                      icon: const Padding(
-                        padding: EdgeInsets.only(left: 15.0),
-                        child: Icon(Icons.arrow_downward),
-                      ),
-                      elevation: 16,
-                      underline: Container(
-                        height: 2,
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropoffValue = newValue!;
-                        });
-                      },
-                      items:
-                          options.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Passengers:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blueGrey.shade900,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey.shade300,
-                    ),
-                    child: DropdownButton<int>(
-                      value: passengers,
-                      icon: const Padding(
-                        padding: EdgeInsets.only(left: 140.0),
-                        child: Icon(
-                          Icons.arrow_downward,
-                        ),
-                      ),
-                      elevation: 16,
-                      underline: Container(
-                        height: 2,
-                      ),
-                      onChanged: (int? newValue) {
-                        setState(() {
-                          passengers = newValue!;
-                        });
-                      },
-                      items: numPassengers.map<DropdownMenuItem<int>>((value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: loading
-                ? const CircularProgressIndicator()
-                : requestError
-                    ? const Text(
-                        'Error',
-                        style: TextStyle(color: Colors.red),
-                      )
-                    : null,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: TextButton(
-              //REQUEST BUTTON
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  border: Border.all(
-                    color: Colors.red.shade900,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  'Request',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                    color: Colors.red.shade900,
-                  ),
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 25),
+              child: Text(
+                'Request A Ride',
+                style: TextStyle(
+                  fontSize: 32,
                 ),
               ),
-              onPressed: () async {
-                loading = true;
-                setState(() {});
-                final body = {
-                  "pickup": pickupValue,
-                  "dropoff": dropoffValue,
-                  "passengers": passengers
-                };
-                var response =
-                    await postRequest('rides', {"method": "add", "ride": body});
-                loading = false;
-                if (response.statusCode == 202) {
-                  requestError = false;
-                  Navigator.pushNamed(context, '/requestStatus',
-                      arguments: body);
-                } else {
-                  requestError = true;
-                }
-                setState(() {});
-              },
             ),
-          ),
-        ],
-      ),
-    );
+            // Pickup Location dropdown
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'Pickup:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blueGrey.shade900,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: dropdownWidth,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: pickupValue,
+                        underline: Container(),
+                        icon: const Icon(Icons.arrow_downward),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            pickupValue = newValue!;
+                          });
+                        },
+                        items: options
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Dropoff Location dropdown
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'Dropoff:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blueGrey.shade900,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: dropdownWidth,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: dropoffValue,
+                        underline: Container(),
+                        icon: const Icon(Icons.arrow_downward),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropoffValue = newValue!;
+                          });
+                        },
+                        items: options
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Passengers dropdown
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'Passengers:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blueGrey.shade900,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: dropdownWidth,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<int>(
+                        isExpanded: true,
+                        value: passengers,
+                        underline: Container(),
+                        icon: const Icon(Icons.arrow_downward),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            passengers = newValue!;
+                          });
+                        },
+                        items:
+                            numPassengers.map<DropdownMenuItem<int>>((value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Loading Icon when a request is made
+            Container(
+              child: loading
+                  ? const CircularProgressIndicator()
+                  : requestError
+                      ? const Text(
+                          '* Invalid Input',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : serverError
+                          ? const Text(
+                              '* Server Error',
+                              style: TextStyle(color: Colors.red),
+                            )
+                          : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 20),
+              child: TextButton(
+                //REQUEST BUTTON
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                  decoration: BoxDecoration(
+                    color: Colors.red[100],
+                    border: Border.all(
+                      color: Colors.red.shade900,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Text(
+                    'Request',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
+                      color: Colors.red.shade900,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  loading = true;
+                  setState(() {});
+                  final body = {
+                    "pickup": pickupValue,
+                    "dropoff": dropoffValue,
+                    "passengers": passengers
+                  };
+                  if (pickupValue != dropoffValue) {
+                    requestError = false;
+                    var response = await postRequest(
+                        'rides', {"method": "add", "ride": body});
+                    if (response.statusCode == 202) {
+                      serverError = false;
+                      Navigator.pushNamed(context, '/requestStatus',
+                          arguments: {"person": args, "ride": body});
+                    } else {
+                      serverError = true;
+                    }
+                  } else {
+                    requestError = true;
+                  }
+                  loading = false;
+                  setState(() {});
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

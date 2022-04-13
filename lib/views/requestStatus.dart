@@ -14,7 +14,7 @@ class RequestStatusPage extends StatefulWidget {
 class _RequestStatusPageState extends State<RequestStatusPage> {
   @override
   Widget build(BuildContext context) {
-    var ride = ModalRoute.of(context)!.settings.arguments as Map;
+    var args = ModalRoute.of(context)!.settings.arguments as Map;
     // print(ride);
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -41,13 +41,22 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
           ],
         ),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 25),
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        double width = constraints.maxWidth;
+        double padding = 10;
+        width > 500
+            ? padding = 50
+            : width > 400
+                ? padding = 30
+                : null;
+        return Container(
+          alignment: Alignment.topCenter,
+          child: Container(
+            constraints:
+                width > 400 ? const BoxConstraints(maxWidth: 600) : null,
+            padding: EdgeInsets.fromLTRB(padding, 25, padding, 0),
+            child: SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
@@ -58,7 +67,6 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    width: 500,
                     child: Column(
                       children: [
                         Padding(
@@ -73,7 +81,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -82,7 +90,9 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   style: const TextStyle(
-                                      fontSize: 16, fontFamily: 'Lora'),
+                                      fontSize: 20,
+                                      fontFamily: 'Lora',
+                                      color: Colors.black),
                                   children: <TextSpan>[
                                     const TextSpan(
                                         text:
@@ -129,12 +139,12 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                             ),
                             onPressed: () {
                               Navigator.pushNamed(context, '/map',
-                                  arguments: ride);
+                                  arguments: args);
                             },
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: TextButton(
                             style: ButtonStyle(
                               backgroundColor:
@@ -164,23 +174,23 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      ConfirmCancel(ride: ride));
+                                      ConfirmCancel(args: args));
                             },
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  const WaitTimeBox()
+                  const Padding(
+                    padding: EdgeInsets.only(top: 15),
+                    child: WaitTimeBox(),
+                  )
                 ],
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

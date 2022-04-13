@@ -1,5 +1,8 @@
 // ignore_for_file: file_names
 
+import 'dart:async';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:campus_shuttle/widgets/requestRide/waitTimeBox.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_shuttle/widgets/requestRide/locationPicker.dart';
@@ -15,15 +18,49 @@ class RequestRidePage extends StatefulWidget {
 //HOMEPAGE
 class _RequestRidePageState extends State<RequestRidePage> {
   late Future<int> waitTime;
+  bool driverLoginError = false;
+  bool serverError = false;
+  String _timeString = DateFormat('kk').format(DateTime.now()).toString();
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     waitTime = getFullWaitTime();
+    timer = Timer.periodic(const Duration(minutes: 5), (Timer t) => _getTime());
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  void _getTime() {
+    final String formattedDateTime =
+        DateFormat('kk').format(DateTime.now()).toString();
+    setState(() {
+      _timeString = formattedDateTime;
+      // print(_timeString);
+    });
+  }
+
+  String _getTextGreeting(String name) {
+    int time = int.parse(_timeString);
+    String output = "";
+    time > 17
+        ? output = 'Good Evening, $name'
+        : time > 12
+            ? output = 'Good Afternoon, $name'
+            : output = 'Good Morning, $name';
+    return output;
   }
 
   @override
   Widget build(BuildContext context) {
+    var person = ModalRoute.of(context)!.settings.arguments as Map;
+    String name = person['name'];
+    String email = person['email'];
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -51,26 +88,100 @@ class _RequestRidePageState extends State<RequestRidePage> {
           ],
         ),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 25),
-              child: Column(
-                children: const [
-                  LocationPicker(), // Menu Box
-                  SizedBox(
-                    height: 20,
-                  ),
-                  WaitTimeBox(helpText: true)
-                ],
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          double width = constraints.maxWidth;
+          double padding = 10;
+          width > 500
+              ? padding = 50
+              : width > 400
+                  ? padding = 30
+                  : null;
+          return Container(
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints:
+                  width > 400 ? const BoxConstraints(maxWidth: 600) : null,
+              padding: EdgeInsets.fromLTRB(padding, 10, padding, 0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        _getTextGreeting(name),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+                    ),
+                    LocationPicker(args: person),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 15),
+                      child: WaitTimeBox(helpText: true),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 15),
+                      child: Text(
+                          'Catholic University Office of Transportation and Parking Services'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        '202-552-7275',
+                        style: TextStyle(
+                          color: Colors.blue[800],
+                        ),
+                      ),
+                    ),
+                    driverLoginError
+                        ? const Text("* Not authorized as a driver",
+                            style: TextStyle(color: Colors.red))
+                        : serverError
+                            ? const Text("* Server Error",
+                                style: TextStyle(color: Colors.red))
+                            : Container(),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Driver? '),
+                          ElevatedButton(
+                            onPressed: () async {
+                              driverLoginError = false;
+                              var response = await postRequest('drivers', {
+                                "method": "check",
+                                "name": name,
+                                "email": email
+                              });
+                              if (response.statusCode == 200) {
+                                serverError = false;
+                                if (jsonDecode(response.body)['valid']) {
+                                  Navigator.pushNamed(context, '/driver',
+                                      arguments: person);
+                                } else {
+                                  driverLoginError = true;
+                                }
+                              } else {
+                                serverError = true;
+                              }
+                              setState(() {});
+                            },
+                            child: const Text('Login'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

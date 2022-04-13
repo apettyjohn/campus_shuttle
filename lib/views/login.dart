@@ -1,6 +1,5 @@
-import 'package:campus_shuttle/widgets/login/menuDialogue.dart';
 import 'package:flutter/material.dart';
-import 'package:campus_shuttle/widgets/centeredView.dart';
+import 'package:campus_shuttle/widgets/login/menuDialogue.dart';
 import 'package:campus_shuttle/widgets/login/body.dart';
 
 class LoginPage extends StatelessWidget {
@@ -8,6 +7,21 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    double loginPadding;
+    width > 500
+        ? loginPadding = 50
+        : width > 400
+            ? loginPadding = 30
+            : loginPadding = 10;
+
+    Widget mainCard = Container(
+      padding: EdgeInsets.fromLTRB(loginPadding, 50, loginPadding, 0),
+      child: const SingleChildScrollView(
+        child: LoginBox(),
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -40,12 +54,20 @@ class LoginPage extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: const [
-            CenteredView(child: LoginBox()),
-          ],
-        ),
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth > 400) {
+            return Container(
+              alignment: Alignment.topCenter,
+              child: Container(
+                child: mainCard,
+                constraints: const BoxConstraints(maxWidth: 700),
+              ),
+            );
+          } else {
+            return mainCard;
+          }
+        },
       ),
     );
   }

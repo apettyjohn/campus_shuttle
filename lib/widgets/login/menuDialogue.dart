@@ -40,8 +40,8 @@ class _LoginMenuState extends State<LoginMenu> {
             ),
             TextButton(
               child: Container(
-                padding: const EdgeInsets.only(
-                    left: 50, right: 50, top: 10, bottom: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(10),

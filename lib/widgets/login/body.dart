@@ -1,7 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:campus_shuttle/databaseFunctions.dart';
+
+// Global vars because the subclass
+bool driverCheckBox = false;
+bool adminCheckBox = false;
 
 class LoginBox extends StatefulWidget {
   const LoginBox({Key? key}) : super(key: key);
@@ -11,9 +14,7 @@ class LoginBox extends StatefulWidget {
 }
 
 class _LoginBoxState extends State<LoginBox> {
-  bool driverCheckBox = false;
   bool driverError = false;
-  bool adminCheckBox = false;
   bool adminError = false;
   bool serverError = false;
   bool loginError = false;
@@ -22,8 +23,13 @@ class _LoginBoxState extends State<LoginBox> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  void callback() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
@@ -120,7 +126,8 @@ class _LoginBoxState extends State<LoginBox> {
                         } else if (adminCheckBox) {
                           Navigator.pushNamed(context, '/admin');
                         } else {
-                          Navigator.pushNamed(context, '/requestRide');
+                          Navigator.pushNamed(context, '/requestRide',
+                              arguments: {"name": name, "email": email});
                         }
                       } else {
                         setState(() {});
@@ -130,8 +137,7 @@ class _LoginBoxState extends State<LoginBox> {
                     }
                   },
                   child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+                      padding: EdgeInsets.symmetric(vertical: 15),
                       child: Text(
                         'Submit',
                         style: TextStyle(fontSize: 18),
@@ -142,41 +148,57 @@ class _LoginBoxState extends State<LoginBox> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Checkbox(
-                    value: driverCheckBox,
-                    onChanged: (checked) {
-                      setState(() {
-                        driverCheckBox = checked!;
-                        adminCheckBox = false;
-                      });
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text('Driver', style: TextStyle(fontSize: 18)),
-                  ),
-                  const SizedBox(
-                    width: 50,
-                  ),
-                  Checkbox(
-                    value: adminCheckBox,
-                    onChanged: (checked) {
-                      setState(() {
-                        adminCheckBox = checked!;
-                        driverCheckBox = false;
-                      });
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text('Admin', style: TextStyle(fontSize: 18)),
-                  ),
+                  CheckboxWText(role: "Driver", setstate: callback),
+                  width > 400
+                      ? const SizedBox(width: 50)
+                      : const SizedBox(width: 10),
+                  CheckboxWText(role: "Admin", setstate: callback)
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// Check box class
+class CheckboxWText extends StatefulWidget {
+  final String role;
+  final Function setstate;
+  const CheckboxWText({Key? key, required this.role, required this.setstate})
+      : super(key: key);
+
+  @override
+  State<CheckboxWText> createState() => _CheckboxWTextState();
+}
+
+class _CheckboxWTextState extends State<CheckboxWText> {
+  @override
+  Widget build(BuildContext context) {
+    Function rebuild = widget.setstate;
+    String text = widget.role;
+    String role = text.toLowerCase();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Checkbox(
+          value: role == "driver" ? driverCheckBox : adminCheckBox,
+          onChanged: (checked) {
+            driverCheckBox = false;
+            adminCheckBox = false;
+            role == "driver"
+                ? driverCheckBox = checked!
+                : adminCheckBox = checked!;
+            rebuild();
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+          child: Text(text, style: const TextStyle(fontSize: 18)),
+        )
+      ],
     );
   }
 }

@@ -64,7 +64,7 @@ class Ride extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 '${index + 1} |',
                 style: TextStyle(
@@ -130,13 +130,10 @@ class Ride extends StatelessWidget {
                 color: Colors.grey[500],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Colors.grey[400],
-                size: 35,
-              ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.grey[400],
+              size: 35,
             ),
           ],
         ),

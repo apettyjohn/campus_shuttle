@@ -13,8 +13,8 @@ class DriverPage extends StatefulWidget {
 }
 
 class _DriverPageState extends State<DriverPage> {
-  late Timer _everySecond;
   var rides = [];
+  late Timer timer;
 
   Future<void> getRidesWrapper() async {
     rides = await getRides();
@@ -25,9 +25,15 @@ class _DriverPageState extends State<DriverPage> {
   void initState() {
     super.initState();
     getRidesWrapper();
-    _everySecond = Timer.periodic(const Duration(seconds: 5), (Timer t) {
-      getRidesWrapper();
-    });
+    // ignore: unused_local_variable
+    timer = Timer.periodic(
+        const Duration(seconds: 5), (Timer t) => getRidesWrapper());
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -58,7 +64,7 @@ class _DriverPageState extends State<DriverPage> {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
             Padding(
