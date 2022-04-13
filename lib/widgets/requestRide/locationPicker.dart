@@ -26,11 +26,12 @@ class _LocationPickerState extends State<LocationPicker> {
   ];
   List numPassengers = [for (var i = 1; i <= 9; i++) i];
   double dropdownWidth = 210;
-  Map args = {};
+  late bool serverOn;
 
   @override
   Widget build(BuildContext context) {
-    args = widget.args;
+    Map args = widget.args;
+    serverOn = args['server'];
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       var width = constraints.maxWidth;
@@ -247,15 +248,20 @@ class _LocationPickerState extends State<LocationPicker> {
                     "passengers": passengers
                   };
                   if (pickupValue != dropoffValue) {
-                    requestError = false;
-                    var response = await postRequest(
-                        'rides', {"method": "add", "ride": body});
-                    if (response.statusCode == 202) {
-                      serverError = false;
+                    if (serverOn) {
+                      requestError = false;
+                      var response = await postRequest(
+                          'rides', {"method": "add", "ride": body});
+                      if (response.statusCode == 202) {
+                        serverError = false;
+                        Navigator.pushNamed(context, '/requestStatus',
+                            arguments: {"person": args, "ride": body});
+                      } else {
+                        serverError = true;
+                      }
+                    } else {
                       Navigator.pushNamed(context, '/requestStatus',
                           arguments: {"person": args, "ride": body});
-                    } else {
-                      serverError = true;
                     }
                   } else {
                     requestError = true;

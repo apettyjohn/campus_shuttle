@@ -5,7 +5,9 @@ import 'rideDialogue.dart';
 
 class RideList extends StatelessWidget {
   final List rides;
-  const RideList({Key? key, required this.rides}) : super(key: key);
+  final bool serverOn;
+  const RideList({Key? key, required this.rides, required this.serverOn})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class RideList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Ride(
+              serverOn: serverOn,
               pickup: rides[index]['pickup'],
               dropoff: rides[index]['dropoff'],
               passenger: rides[index]['passengers'],
@@ -34,6 +37,7 @@ class Ride extends StatelessWidget {
   final String dropoff;
   final int passenger;
   final int index;
+  final bool serverOn;
 
   const Ride({
     Key? key,
@@ -41,6 +45,7 @@ class Ride extends StatelessWidget {
     required this.dropoff,
     required this.passenger,
     required this.index,
+    required this.serverOn,
   }) : super(key: key);
 
   @override
@@ -56,6 +61,7 @@ class Ride extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) => ViewRide(
+                  serverOn: serverOn,
                   pickup: pickup,
                   dropoff: dropoff,
                   passenger: passenger,

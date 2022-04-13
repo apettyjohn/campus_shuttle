@@ -7,7 +7,13 @@ class WaitTimeBox extends StatefulWidget {
   final bool? helpText;
   final bool? allElements;
   final int? index;
-  const WaitTimeBox({Key? key, this.helpText, this.allElements, this.index})
+  final bool serverOn;
+  const WaitTimeBox(
+      {Key? key,
+      required this.serverOn,
+      this.helpText,
+      this.allElements,
+      this.index})
       : super(key: key);
 
   @override
@@ -19,6 +25,7 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
   bool allElements = true;
   int index = -1;
   var waitTime = 0;
+  late bool serverOn;
 
   Future<void> waitTimeWrapper() async {
     if (allElements) {
@@ -42,7 +49,10 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
     if (widget.allElements != null) {
       allElements = widget.allElements!;
     }
-    waitTimeWrapper();
+    serverOn = widget.serverOn;
+    if (serverOn) {
+      waitTimeWrapper();
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -74,7 +84,9 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
                 index < 0
                     ? IconButton(
                         onPressed: () async {
-                          await waitTimeWrapper();
+                          if (serverOn) {
+                            await waitTimeWrapper();
+                          }
                         },
                         icon: const Icon(Icons.refresh))
                     : Container(),

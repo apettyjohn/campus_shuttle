@@ -7,13 +7,15 @@ bool driverCheckBox = false;
 bool adminCheckBox = false;
 
 class LoginBox extends StatefulWidget {
-  const LoginBox({Key? key}) : super(key: key);
+  final bool serverOn;
+  const LoginBox({Key? key, required this.serverOn}) : super(key: key);
 
   @override
   State<LoginBox> createState() => _LoginBoxState();
 }
 
 class _LoginBoxState extends State<LoginBox> {
+  late bool serverOn;
   bool driverError = false;
   bool adminError = false;
   bool serverError = false;
@@ -30,6 +32,7 @@ class _LoginBoxState extends State<LoginBox> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    serverOn = widget.serverOn;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
@@ -99,41 +102,64 @@ class _LoginBoxState extends State<LoginBox> {
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(20)),
                   onPressed: () async {
-                    loading = true;
-                    setState(() {});
-                    var request = await postRequest(
-                        'login', {"name": name, "email": email});
-                    if (request.statusCode == 200) {
-                      serverError = false;
-                      driverError = false;
-                      adminError = false;
-                      var body = jsonDecode(request.body);
-                      loginError = !body['valid'];
-                      if (driverCheckBox) {
-                        driverError = !body['driver'];
-                      }
-                      if (adminCheckBox) {
-                        adminError = !body['admin'];
-                      }
-                    } else {
-                      serverError = true;
-                    }
-                    loading = false;
-                    if (!loginError && !serverError) {
-                      if (!driverError && !adminError) {
+                    if (serverOn) {
+                      loading = true;
+                      setState(() {});
+                      var request = await postRequest(
+                          'login', {"name": name, "email": email});
+                      if (request.statusCode == 200) {
+                        serverError = false;
+                        driverError = false;
+                        adminError = false;
+                        var body = jsonDecode(request.body);
+                        loginError = !body['valid'];
                         if (driverCheckBox) {
-                          Navigator.pushNamed(context, '/driver');
-                        } else if (adminCheckBox) {
-                          Navigator.pushNamed(context, '/admin');
+                          driverError = !body['driver'];
+                        }
+                        if (adminCheckBox) {
+                          adminError = !body['admin'];
+                        }
+                      } else {
+                        serverError = true;
+                      }
+                      loading = false;
+                      if (!loginError && !serverError) {
+                        if (!driverError && !adminError) {
+                          if (driverCheckBox) {
+                            Navigator.pushNamed(context, '/driver',
+                                arguments: {"server": serverOn});
+                          } else if (adminCheckBox) {
+                            Navigator.pushNamed(context, '/admin',
+                                arguments: {"server": serverOn});
+                          } else {
+                            Navigator.pushNamed(context, '/requestRide',
+                                arguments: {
+                                  "server": serverOn,
+                                  "name": name,
+                                  "email": email
+                                });
+                          }
                         } else {
-                          Navigator.pushNamed(context, '/requestRide',
-                              arguments: {"name": name, "email": email});
+                          setState(() {});
                         }
                       } else {
                         setState(() {});
                       }
                     } else {
-                      setState(() {});
+                      if (driverCheckBox) {
+                        Navigator.pushNamed(context, '/driver',
+                            arguments: {"server": serverOn});
+                      } else if (adminCheckBox) {
+                        Navigator.pushNamed(context, '/admin',
+                            arguments: {"server": serverOn});
+                      } else {
+                        Navigator.pushNamed(context, '/requestRide',
+                            arguments: {
+                              "server": serverOn,
+                              "name": name,
+                              "email": email
+                            });
+                      }
                     }
                   },
                   child: const Padding(

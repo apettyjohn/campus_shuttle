@@ -6,6 +6,8 @@ import 'views/login.dart';
 import 'views/map.dart';
 import 'views/requestStatus.dart';
 
+const bool serverOn = false;
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Login',
       routes: {
         '/admin': (context) => const AdminPage(),
-        '/login': (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(serverOn: serverOn),
         '/map': (context) => const MapScreen(),
         '/driver': (context) => const DriverPage(),
         '/requestRide': (context) => const RequestRidePage(),
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.red,
           textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Lora')),
-      home: const LoginPage(),
+      home: const LoginPage(serverOn: serverOn),
     );
   }
 }

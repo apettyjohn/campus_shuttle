@@ -15,12 +15,14 @@ class ConfirmCancel extends StatefulWidget {
 class _ConfirmCancelState extends State<ConfirmCancel> {
   bool loading = false;
   bool requestError = false;
+  late bool serverOn;
 
   @override
   Widget build(BuildContext context) {
     final Map body = widget.args;
     final Map ride = body['ride'];
     final Map person = body['person'];
+    serverOn = person['server'];
 
     return AlertDialog(
       backgroundColor: Colors.transparent,
@@ -75,16 +77,21 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
               onPressed: () async {
                 loading = true;
                 setState(() {});
-                var response = await postRequest(
-                    'rides', {"method": "delete", "ride": ride});
-                loading = false;
-                if (response.statusCode == 202) {
-                  requestError = false;
+                if (serverOn) {
+                  var response = await postRequest(
+                      'rides', {"method": "delete", "ride": ride});
+                  if (response.statusCode == 202) {
+                    requestError = false;
+                    Navigator.pushNamed(context, '/requestRide',
+                        arguments: person);
+                  } else {
+                    requestError = true;
+                  }
+                } else {
                   Navigator.pushNamed(context, '/requestRide',
                       arguments: person);
-                } else {
-                  requestError = true;
                 }
+                loading = false;
                 setState(() {});
               },
             ),

@@ -11,6 +11,7 @@ class ViewRide extends StatefulWidget {
   final String dropoff;
   final int passenger;
   final int index;
+  final bool serverOn;
 
   const ViewRide({
     Key? key,
@@ -18,6 +19,7 @@ class ViewRide extends StatefulWidget {
     required this.dropoff,
     required this.passenger,
     required this.index,
+    required this.serverOn,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class _ViewRideState extends State<ViewRide> {
     final String dropoff = widget.dropoff;
     final int passenger = widget.passenger;
     final int index = widget.index;
+    final bool serverOn = widget.serverOn;
 
     return LayoutBuilder(
       builder: (context, BoxConstraints constraints) {
@@ -141,7 +144,10 @@ class _ViewRideState extends State<ViewRide> {
                           ),
                         ),
                         WaitTimeBox(
-                            helpText: false, allElements: false, index: index),
+                            helpText: false,
+                            serverOn: serverOn,
+                            allElements: false,
+                            index: index),
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 10),
                           child: Container(
@@ -155,15 +161,20 @@ class _ViewRideState extends State<ViewRide> {
                             ),
                             child: Center(
                               child: TextButton(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 40),
-                                  child: Text('Arrived at Pickup',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Colors.green[700],
-                                      )),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Text('Arrived at Pickup',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.green[700],
+                                          )),
+                                    ),
+                                  ],
                                 ),
                                 onPressed: () {},
                               ),
@@ -183,15 +194,20 @@ class _ViewRideState extends State<ViewRide> {
                             ),
                             child: Center(
                               child: TextButton(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 60),
-                                  child: Text('Cancel Ride',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Colors.red[700],
-                                      )),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Text('Cancel Ride',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.red[700],
+                                          )),
+                                    ),
+                                  ],
                                 ),
                                 onPressed: () {},
                               ),

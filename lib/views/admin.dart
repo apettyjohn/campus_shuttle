@@ -7,26 +7,55 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(children: [
-        Container(
-          alignment: Alignment.center,
-          color: Colors.red[900],
-          height: 75,
-          child: ElevatedButton(
-            onPressed: () {
-              // Navigate back to first route when tapped.
-              Navigator.pushNamed(context, '/login');
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                'Go back to Login',
-                style: TextStyle(fontSize: 20),
+      appBar: AppBar(
+        leading: null,
+        toolbarHeight: 70,
+        backgroundColor: Colors.red[900],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: SizedBox(
+                height: 50,
+                child: Image.asset('assets/images/cuaLogo.png'),
               ),
+            ),
+            const Text(
+              'Campus Shuttle',
+              style: TextStyle(
+                fontSize: 26,
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    // Navigate back to first route when tapped.
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Go back to Login page',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      ]),
+      ),
     );
   }
 }

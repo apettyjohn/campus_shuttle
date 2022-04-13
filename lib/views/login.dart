@@ -3,7 +3,8 @@ import 'package:campus_shuttle/widgets/login/menuDialogue.dart';
 import 'package:campus_shuttle/widgets/login/body.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final bool serverOn;
+  const LoginPage({Key? key, required this.serverOn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,8 @@ class LoginPage extends StatelessWidget {
 
     Widget mainCard = Container(
       padding: EdgeInsets.fromLTRB(loginPadding, 50, loginPadding, 0),
-      child: const SingleChildScrollView(
-        child: LoginBox(),
+      child: SingleChildScrollView(
+        child: LoginBox(serverOn: serverOn),
       ),
     );
 

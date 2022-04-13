@@ -17,17 +17,17 @@ class RequestRidePage extends StatefulWidget {
 
 //HOMEPAGE
 class _RequestRidePageState extends State<RequestRidePage> {
-  late Future<int> waitTime;
   bool driverLoginError = false;
   bool serverError = false;
   String _timeString = DateFormat('kk').format(DateTime.now()).toString();
   late Timer timer;
+  bool serverOn = true;
 
   @override
   void initState() {
     super.initState();
-    waitTime = getFullWaitTime();
-    timer = Timer.periodic(const Duration(minutes: 5), (Timer t) => _getTime());
+    timer =
+        Timer.periodic(const Duration(minutes: 10), (Timer t) => _getTime());
   }
 
   @override
@@ -58,9 +58,11 @@ class _RequestRidePageState extends State<RequestRidePage> {
 
   @override
   Widget build(BuildContext context) {
-    var person = ModalRoute.of(context)!.settings.arguments as Map;
-    String name = person['name'];
-    String email = person['email'];
+    var args = ModalRoute.of(context)!.settings.arguments as Map;
+    serverOn = args['server'];
+    String name = args['name'];
+    String email = args['email'];
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -118,10 +120,12 @@ class _RequestRidePageState extends State<RequestRidePage> {
                         ),
                       ),
                     ),
-                    LocationPicker(args: person),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15),
-                      child: WaitTimeBox(helpText: true),
+                    // Main ride request body
+                    LocationPicker(args: args),
+                    // Wait time box
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: WaitTimeBox(helpText: true, serverOn: serverOn),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(top: 15),
@@ -152,24 +156,29 @@ class _RequestRidePageState extends State<RequestRidePage> {
                           const Text('Driver? '),
                           ElevatedButton(
                             onPressed: () async {
-                              driverLoginError = false;
-                              var response = await postRequest('drivers', {
-                                "method": "check",
-                                "name": name,
-                                "email": email
-                              });
-                              if (response.statusCode == 200) {
-                                serverError = false;
-                                if (jsonDecode(response.body)['valid']) {
-                                  Navigator.pushNamed(context, '/driver',
-                                      arguments: person);
+                              if (serverOn) {
+                                driverLoginError = false;
+                                var response = await postRequest('drivers', {
+                                  "method": "check",
+                                  "name": name,
+                                  "email": email
+                                });
+                                if (response.statusCode == 200) {
+                                  serverError = false;
+                                  if (jsonDecode(response.body)['valid']) {
+                                    Navigator.pushNamed(context, '/driver',
+                                        arguments: args);
+                                  } else {
+                                    driverLoginError = true;
+                                  }
                                 } else {
-                                  driverLoginError = true;
+                                  serverError = true;
                                 }
+                                setState(() {});
                               } else {
-                                serverError = true;
+                                Navigator.pushNamed(context, '/driver',
+                                    arguments: args);
                               }
-                              setState(() {});
                             },
                             child: const Text('Login'),
                           ),

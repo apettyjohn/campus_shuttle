@@ -15,7 +15,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments as Map;
-    // print(ride);
+    final bool serverOn = args['person']['server'];
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -181,9 +181,9 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: WaitTimeBox(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: WaitTimeBox(serverOn: serverOn),
                   )
                 ],
               ),
