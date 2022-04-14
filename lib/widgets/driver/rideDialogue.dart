@@ -222,10 +222,10 @@ class _ViewRideState extends State<ViewRide> {
                                   ],
                                 ),
                                 onPressed: () async {
-                                  cancelTimer();
                                   loading = true;
                                   setState(() {});
                                   if (serverOn) {
+                                    cancelTimer();
                                     var response = await postRequest('rides',
                                         {"method": "delete", "ride": ride});
                                     if (response.statusCode == 202) {
