@@ -5,17 +5,22 @@ import 'package:campus_shuttle/widgets/requestRide/waitTimeBox.dart';
 import 'package:campus_shuttle/widgets/requestStatus/cancelDialogue.dart';
 
 class RequestStatusPage extends StatefulWidget {
-  const RequestStatusPage({Key? key}) : super(key: key);
+  final bool serverOn;
+  const RequestStatusPage({Key? key, required this.serverOn}) : super(key: key);
 
   @override
-  State<RequestStatusPage> createState() => _RequestStatusPageState();
+  State<RequestStatusPage> createState() =>
+      // ignore: no_logic_in_create_state
+      _RequestStatusPageState(serverOn: serverOn);
 }
 
 class _RequestStatusPageState extends State<RequestStatusPage> {
+  final bool serverOn;
+  _RequestStatusPageState({required this.serverOn});
+
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments as Map;
-    final bool serverOn = args['person']['server'];
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -174,7 +179,8 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
-                                      ConfirmCancel(args: args));
+                                      ConfirmCancel(
+                                          args: args, serverOn: serverOn));
                             },
                           ),
                         ),

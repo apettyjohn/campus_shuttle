@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'rideDialogue.dart';
 
 class RideList extends StatelessWidget {
-  final List rides;
+  final Map args;
   final bool serverOn;
-  const RideList({Key? key, required this.rides, required this.serverOn})
+  const RideList({Key? key, required this.args, required this.serverOn})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final List rides = args['rides'];
     return Flexible(
       child: ListView.builder(
         itemCount: rides.length,
@@ -24,6 +25,7 @@ class RideList extends StatelessWidget {
               dropoff: rides[index]['dropoff'],
               passenger: rides[index]['passengers'],
               index: index,
+              args: args,
             ),
           );
         },
@@ -38,6 +40,7 @@ class Ride extends StatelessWidget {
   final int passenger;
   final int index;
   final bool serverOn;
+  final Map args;
 
   const Ride({
     Key? key,
@@ -46,6 +49,7 @@ class Ride extends StatelessWidget {
     required this.passenger,
     required this.index,
     required this.serverOn,
+    required this.args,
   }) : super(key: key);
 
   @override
@@ -60,12 +64,25 @@ class Ride extends StatelessWidget {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (BuildContext context) => ViewRide(
-                  serverOn: serverOn,
-                  pickup: pickup,
-                  dropoff: dropoff,
-                  passenger: passenger,
-                  index: index));
+              builder: (BuildContext context) {
+                return serverOn
+                    ? ViewRide(
+                        serverOn: serverOn,
+                        pickup: pickup,
+                        dropoff: dropoff,
+                        passenger: passenger,
+                        index: index,
+                        args: args,
+                      )
+                    : ViewRide(
+                        serverOn: serverOn,
+                        pickup: pickup,
+                        dropoff: dropoff,
+                        passenger: passenger,
+                        index: index,
+                        args: args,
+                      );
+              });
         },
         child: Row(
           children: [

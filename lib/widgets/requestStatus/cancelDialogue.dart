@@ -6,23 +6,27 @@ import 'package:flutter/material.dart';
 //CONFIRM CANCEL
 class ConfirmCancel extends StatefulWidget {
   final Map args;
-  const ConfirmCancel({Key? key, required this.args}) : super(key: key);
+  final bool serverOn;
+  const ConfirmCancel({Key? key, required this.args, required this.serverOn})
+      : super(key: key);
 
   @override
-  State<ConfirmCancel> createState() => _ConfirmCancelState();
+  // ignore: no_logic_in_create_state
+  State<ConfirmCancel> createState() => _ConfirmCancelState(serverOn: serverOn);
 }
 
 class _ConfirmCancelState extends State<ConfirmCancel> {
   bool loading = false;
   bool requestError = false;
-  late bool serverOn;
+  bool serverOn;
+
+  _ConfirmCancelState({required this.serverOn});
 
   @override
   Widget build(BuildContext context) {
     final Map body = widget.args;
     final Map ride = body['ride'];
     final Map person = body['person'];
-    serverOn = person['server'];
 
     return AlertDialog(
       backgroundColor: Colors.transparent,

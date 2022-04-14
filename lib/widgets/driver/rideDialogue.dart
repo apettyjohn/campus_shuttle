@@ -1,5 +1,5 @@
 // ignore_for_file: file_names
-
+import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:campus_shuttle/widgets/requestRide/waitTimeBox.dart';
 import 'package:flutter/material.dart';
 
@@ -12,15 +12,17 @@ class ViewRide extends StatefulWidget {
   final int passenger;
   final int index;
   final bool serverOn;
+  final Map args;
 
-  const ViewRide({
-    Key? key,
-    required this.pickup,
-    required this.dropoff,
-    required this.passenger,
-    required this.index,
-    required this.serverOn,
-  }) : super(key: key);
+  const ViewRide(
+      {Key? key,
+      required this.pickup,
+      required this.dropoff,
+      required this.passenger,
+      required this.index,
+      required this.serverOn,
+      required this.args})
+      : super(key: key);
 
   @override
   State<ViewRide> createState() => _ViewRideState();
@@ -36,6 +38,16 @@ class _ViewRideState extends State<ViewRide> {
     final int passenger = widget.passenger;
     final int index = widget.index;
     final bool serverOn = widget.serverOn;
+    final Map args = widget.args;
+    List? rides = args['rides'];
+    Function cancelTimer = args['timerFunc'];
+    final Map ride = {
+      "pickup": pickup,
+      "dropoff": dropoff,
+      "passengers": passenger
+    };
+    bool loading = false;
+    bool requestError = false;
 
     return LayoutBuilder(
       builder: (context, BoxConstraints constraints) {
@@ -209,10 +221,56 @@ class _ViewRideState extends State<ViewRide> {
                                     ),
                                   ],
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  cancelTimer();
+                                  loading = true;
+                                  setState(() {});
+                                  if (serverOn) {
+                                    var response = await postRequest('rides',
+                                        {"method": "delete", "ride": ride});
+                                    if (response.statusCode == 202) {
+                                      requestError = false;
+                                      Navigator.pushNamed(context, '/driver',
+                                          arguments: {
+                                            "name": args['name'],
+                                            "email": args['email']
+                                          });
+                                    } else {
+                                      requestError = true;
+                                    }
+                                  } else {
+                                    for (var x in rides!) {
+                                      if (x['pickup'] == pickup &&
+                                          x['dropoff'] == dropoff &&
+                                          x['passengers'] == passenger) {
+                                        rides.removeAt(rides.indexOf(x));
+                                        break;
+                                      }
+                                    }
+                                    Navigator.pushNamed(context, '/driver',
+                                        arguments: {
+                                          "name": args['name'],
+                                          "email": args['email'],
+                                          "rides": rides
+                                        });
+                                  }
+                                  loading = false;
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: loading
+                              ? const CircularProgressIndicator()
+                              : requestError
+                                  ? const Text(
+                                      'Error',
+                                      style: TextStyle(color: Colors.red),
+                                    )
+                                  : null,
                         ),
                       ],
                     ),

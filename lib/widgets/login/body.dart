@@ -128,17 +128,13 @@ class _LoginBoxState extends State<LoginBox> {
                         if (!driverError && !adminError) {
                           if (driverCheckBox) {
                             Navigator.pushNamed(context, '/driver',
-                                arguments: {"server": serverOn});
+                                arguments: {"name": name, "email": email});
                           } else if (adminCheckBox) {
                             Navigator.pushNamed(context, '/admin',
-                                arguments: {"server": serverOn});
+                                arguments: {"name": name, "email": email});
                           } else {
                             Navigator.pushNamed(context, '/requestRide',
-                                arguments: {
-                                  "server": serverOn,
-                                  "name": name,
-                                  "email": email
-                                });
+                                arguments: {"name": name, "email": email});
                           }
                         }
                       }
@@ -146,17 +142,13 @@ class _LoginBoxState extends State<LoginBox> {
                       loading = false;
                       if (driverCheckBox) {
                         Navigator.pushNamed(context, '/driver',
-                            arguments: {"server": serverOn});
+                            arguments: {"name": name, "email": email});
                       } else if (adminCheckBox) {
                         Navigator.pushNamed(context, '/admin',
-                            arguments: {"server": serverOn});
+                            arguments: {"name": name, "email": email});
                       } else {
                         Navigator.pushNamed(context, '/requestRide',
-                            arguments: {
-                              "server": serverOn,
-                              "name": name,
-                              "email": email
-                            });
+                            arguments: {"name": name, "email": email});
                       }
                     }
                   },

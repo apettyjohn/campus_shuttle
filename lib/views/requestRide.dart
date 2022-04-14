@@ -9,10 +9,13 @@ import 'package:campus_shuttle/widgets/requestRide/locationPicker.dart';
 import 'package:campus_shuttle/databaseFunctions.dart';
 
 class RequestRidePage extends StatefulWidget {
-  const RequestRidePage({Key? key}) : super(key: key);
+  final bool serverOn;
+  const RequestRidePage({Key? key, required this.serverOn}) : super(key: key);
 
   @override
-  State<RequestRidePage> createState() => _RequestRidePageState();
+  State<RequestRidePage> createState() =>
+      // ignore: no_logic_in_create_state
+      _RequestRidePageState(serverOn: serverOn);
 }
 
 //HOMEPAGE
@@ -21,7 +24,9 @@ class _RequestRidePageState extends State<RequestRidePage> {
   bool serverError = false;
   String _timeString = DateFormat('kk').format(DateTime.now()).toString();
   late Timer timer;
-  bool serverOn = true;
+  bool serverOn;
+
+  _RequestRidePageState({required this.serverOn});
 
   @override
   void initState() {
@@ -59,9 +64,13 @@ class _RequestRidePageState extends State<RequestRidePage> {
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments as Map;
-    serverOn = args['server'];
-    String name = args['name'];
-    String email = args['email'];
+    String name = "", email = "";
+    if (args['name'].length > 0) {
+      name = args['name'];
+    }
+    if (args['email'].length > 0) {
+      email = args['email'];
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -121,7 +130,7 @@ class _RequestRidePageState extends State<RequestRidePage> {
                       ),
                     ),
                     // Main ride request body
-                    LocationPicker(args: args),
+                    LocationPicker(args: args, serverOn: serverOn),
                     // Wait time box
                     Padding(
                       padding: const EdgeInsets.only(top: 15),

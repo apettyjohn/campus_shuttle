@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 
 class LocationPicker extends StatefulWidget {
   final Map args;
-  const LocationPicker({Key? key, required this.args}) : super(key: key);
+  final bool serverOn;
+  const LocationPicker({Key? key, required this.args, required this.serverOn})
+      : super(key: key);
 
   @override
-  State<LocationPicker> createState() => _LocationPickerState();
+  State<LocationPicker> createState() =>
+      // ignore: no_logic_in_create_state
+      _LocationPickerState(serverOn: serverOn);
 }
 
 class _LocationPickerState extends State<LocationPicker> {
@@ -26,12 +30,13 @@ class _LocationPickerState extends State<LocationPicker> {
   ];
   List numPassengers = [for (var i = 1; i <= 9; i++) i];
   double dropdownWidth = 210;
-  late bool serverOn;
+  bool serverOn;
+
+  _LocationPickerState({required this.serverOn});
 
   @override
   Widget build(BuildContext context) {
     Map args = widget.args;
-    serverOn = args['server'];
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       var width = constraints.maxWidth;

@@ -6,7 +6,7 @@ import 'views/login.dart';
 import 'views/map.dart';
 import 'views/requestStatus.dart';
 
-const bool serverOn = false;
+const bool serverOn = true;
 
 void main() {
   runApp(const MyApp());
@@ -24,9 +24,10 @@ class MyApp extends StatelessWidget {
         '/admin': (context) => const AdminPage(),
         '/login': (context) => const LoginPage(serverOn: serverOn),
         '/map': (context) => const MapScreen(),
-        '/driver': (context) => const DriverPage(),
-        '/requestRide': (context) => const RequestRidePage(),
-        '/requestStatus': (context) => const RequestStatusPage(),
+        '/driver': (context) => const DriverPage(serverOn: serverOn),
+        '/requestRide': (context) => const RequestRidePage(serverOn: serverOn),
+        '/requestStatus': (context) =>
+            const RequestStatusPage(serverOn: serverOn),
       },
       theme: ThemeData(
           primarySwatch: Colors.red,
