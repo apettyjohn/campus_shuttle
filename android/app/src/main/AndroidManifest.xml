@@ -4,6 +4,8 @@
         android:label="campus_shuttle"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDIoRRNAjuTrPVPBoh0LA7R2gSJdCDw040"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

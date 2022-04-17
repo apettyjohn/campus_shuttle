@@ -3,10 +3,10 @@ import 'views/admin.dart';
 import 'views/driverPage.dart';
 import 'views/requestRide.dart';
 import 'views/login.dart';
-import 'views/map.dart';
+import 'views/mapScreen.dart';
 import 'views/requestStatus.dart';
 
-const bool serverOn = true;
+const bool serverOn = false;
 
 void main() {
   runApp(const MyApp());
