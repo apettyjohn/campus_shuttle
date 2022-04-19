@@ -46,17 +46,15 @@ class LoginPage extends StatelessWidget {
                 child: Image.asset('assets/images/cuaLogo.png'),
               ),
             ),
-            const Text(
-              'Campus Shuttle',
-              style: TextStyle(
-                fontSize: 26,
-              ),
-            ),
+            width > 400
+                ? const Text('Campus Shuttle', style: TextStyle(fontSize: 26))
+                : const Text('Shuttle', style: TextStyle(fontSize: 26)),
           ],
         ),
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+          width = constraints.maxWidth;
           if (constraints.maxWidth > 400) {
             return Container(
               alignment: Alignment.topCenter,

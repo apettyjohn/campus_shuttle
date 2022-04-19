@@ -38,8 +38,7 @@ class _DriverPageState extends State<DriverPage> {
     } else {
       rides = [
         {"pickup": "Opus Hall", "dropoff": "Brookland Metro", "passengers": 2},
-        {"pickup": 'Pryzbyla', "dropoff": 'Opus Hall', "passengers": 4},
-        {"pickup": 'Pryzbyla', "dropoff": 'Maloney Hall', "passengers": 6},
+        {"pickup": "Pryzbyla", "dropoff": "Opus Hall", "passengers": 4},
         {
           "pickup": 'Maloney Hall',
           "dropoff": 'Brookland Metro',
@@ -76,44 +75,41 @@ class _DriverPageState extends State<DriverPage> {
         setState(() {});
       }
       return Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          leading: BackButton(onPressed: () {
-            serverOn ? timer.cancel() : null;
-            Navigator.pushNamed(context, '/requestRide',
-                arguments: {"name": args['name'], "email": args['email']});
-          }),
-          toolbarHeight: 80,
-          backgroundColor: Colors.red[900],
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: SizedBox(
-                  height: 60,
-                  child: Image.asset('assets/images/cuaLogo.png'),
-                ),
-              ),
-              const Text(
-                'Campus Shuttle',
-                style: TextStyle(
-                  fontSize: 26,
-                ),
-              ),
-            ],
+          backgroundColor: Colors.grey[300],
+          appBar: AppBar(
+            leading: BackButton(onPressed: () {
+              serverOn ? timer.cancel() : null;
+              Navigator.pushNamed(context, '/requestRide',
+                  arguments: {"name": args['name'], "email": args['email']});
+            }),
+            toolbarHeight: 80,
+            backgroundColor: Colors.red[900],
+            title: LayoutBuilder(builder: (context, constraints) {
+              return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: SizedBox(
+                        height: 60,
+                        child: Image.asset('assets/images/cuaLogo.png'),
+                      ),
+                    ),
+                    constraints.maxWidth > 350
+                        ? const Text('Campus Shuttle',
+                            style: TextStyle(fontSize: 26))
+                        : const Text('Shuttle', style: TextStyle(fontSize: 26)),
+                    const SizedBox(width: 50)
+                  ]);
+            }),
           ),
-        ),
-        body: Container(
-          alignment: Alignment.topCenter,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(children: [
               Padding(
                 padding: const EdgeInsets.only(top: 30, bottom: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(width: 20),
                     const Spacer(),
@@ -170,11 +166,9 @@ class _DriverPageState extends State<DriverPage> {
                           "email": args['email'],
                           "rides": rides,
                           "timerFunc": cancelTimer
-                        }, serverOn: serverOn),
-            ],
-          ),
-        ),
-      );
+                        }, serverOn: serverOn)
+            ]),
+          ));
     }
   }
 }

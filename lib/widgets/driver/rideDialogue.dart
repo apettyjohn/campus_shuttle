@@ -103,26 +103,30 @@ class _ViewRideState extends State<ViewRide> {
                             ),
                             child: Row(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Pickup:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.blueGrey.shade900,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Drop-off:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.blueGrey.shade900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                constraints.maxWidth > 360
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Pickup:',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.blueGrey.shade900,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Drop-off:',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.blueGrey.shade900,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
                                 const SizedBox(width: 15),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,109 +164,106 @@ class _ViewRideState extends State<ViewRide> {
                             serverOn: serverOn,
                             allElements: false,
                             index: index),
+                        // Green button
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.greenAccent[100],
-                              border: Border.all(
-                                color: Colors.green.shade400,
-                                width: 3,
+                          child: ElevatedButton(
+                            onPressed: index == 0 ? () {} : null,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Start',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: index == 0
+                                            ? Colors.green.shade700
+                                            : Colors.grey.shade700,
+                                      )),
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Center(
-                              child: TextButton(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      child: Text('Arrived at Pickup',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.green[700],
-                                          )),
-                                    ),
-                                  ],
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(
+                                      width: 3,
+                                      color: index == 0
+                                          ? Colors.green.shade400
+                                          : Colors.grey.shade400),
                                 ),
-                                onPressed: () {},
-                              ),
-                            ),
+                                primary: Colors.green.shade100),
                           ),
                         ),
+                        // Red button
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red[100],
-                              border: Border.all(
-                                color: Colors.red.shade400,
-                                width: 3,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: TextButton(
+                            padding: const EdgeInsets.only(top: 10, bottom: 20),
+                            child: ElevatedButton(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      child: Text('Cancel Ride',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.red[700],
-                                          )),
-                                    ),
+                                    Text('Cancel Ride',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red.shade700,
+                                        )),
                                   ],
                                 ),
-                                onPressed: () async {
-                                  loading = true;
-                                  setState(() {});
-                                  if (serverOn) {
-                                    cancelTimer();
-                                    var response = await postRequest('rides',
-                                        {"method": "delete", "ride": ride});
-                                    if (response.statusCode == 202) {
-                                      requestError = false;
-                                      Navigator.pushNamed(context, '/driver',
-                                          arguments: {
-                                            "name": args['name'],
-                                            "email": args['email']
-                                          });
-                                    } else {
-                                      requestError = true;
-                                    }
-                                  } else {
-                                    for (var x in rides!) {
-                                      if (x['pickup'] == pickup &&
-                                          x['dropoff'] == dropoff &&
-                                          x['passengers'] == passenger) {
-                                        rides.removeAt(rides.indexOf(x));
-                                        break;
-                                      }
-                                    }
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(
+                                        width: 3, color: Colors.red.shade400),
+                                  ),
+                                  primary: Colors.red.shade100),
+                              onPressed: () async {
+                                loading = true;
+                                setState(() {});
+                                if (serverOn) {
+                                  cancelTimer();
+                                  var response = await postRequest('rides',
+                                      {"method": "delete", "ride": ride});
+                                  if (response.statusCode == 202) {
+                                    requestError = false;
                                     Navigator.pushNamed(context, '/driver',
                                         arguments: {
                                           "name": args['name'],
-                                          "email": args['email'],
-                                          "rides": rides
+                                          "email": args['email']
                                         });
+                                  } else {
+                                    requestError = true;
                                   }
-                                  loading = false;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
+                                } else {
+                                  for (var x in rides!) {
+                                    if (x['pickup'] == pickup &&
+                                        x['dropoff'] == dropoff &&
+                                        x['passengers'] == passenger) {
+                                      rides.removeAt(rides.indexOf(x));
+                                      break;
+                                    }
+                                  }
+                                  Navigator.pushNamed(context, '/driver',
+                                      arguments: {
+                                        "name": args['name'],
+                                        "email": args['email'],
+                                        "rides": rides
+                                      });
+                                }
+                                loading = false;
+                                setState(() {});
+                              },
+                            )),
                         Container(
-                          padding: const EdgeInsets.only(top: 15),
+                          padding: loading || requestError
+                              ? const EdgeInsets.only(top: 15)
+                              : EdgeInsets.zero,
                           child: loading
                               ? const CircularProgressIndicator()
                               : requestError

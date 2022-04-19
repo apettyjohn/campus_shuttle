@@ -29,7 +29,7 @@ class _LocationPickerState extends State<LocationPicker> {
     'Maloney Hall'
   ];
   List numPassengers = [for (var i = 1; i <= 9; i++) i];
-  double dropdownWidth = 210;
+  double dropdownWidth = 150;
   bool serverOn;
 
   _LocationPickerState({required this.serverOn});
@@ -40,7 +40,13 @@ class _LocationPickerState extends State<LocationPicker> {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       var width = constraints.maxWidth;
-      width > 400 ? dropdownWidth = 250 : null;
+      width > 425
+          ? dropdownWidth = 250
+          : width > 385
+              ? dropdownWidth = 200
+              : width > 330
+                  ? dropdownWidth = 175
+                  : dropdownWidth = 130;
       return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -83,26 +89,23 @@ class _LocationPickerState extends State<LocationPicker> {
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: pickupValue,
-                        underline: Container(),
-                        icon: const Icon(Icons.arrow_downward),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            pickupValue = newValue!;
-                          });
-                        },
-                        items: options
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: pickupValue,
+                      underline: Container(),
+                      icon: const Icon(Icons.arrow_downward),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          pickupValue = newValue!;
+                        });
+                      },
+                      items:
+                          options.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -131,26 +134,23 @@ class _LocationPickerState extends State<LocationPicker> {
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: dropoffValue,
-                        underline: Container(),
-                        icon: const Icon(Icons.arrow_downward),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropoffValue = newValue!;
-                          });
-                        },
-                        items: options
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: dropoffValue,
+                      underline: Container(),
+                      icon: const Icon(Icons.arrow_downward),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropoffValue = newValue!;
+                        });
+                      },
+                      items:
+                          options.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -179,26 +179,22 @@ class _LocationPickerState extends State<LocationPicker> {
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButton<int>(
-                        isExpanded: true,
-                        value: passengers,
-                        underline: Container(),
-                        icon: const Icon(Icons.arrow_downward),
-                        onChanged: (int? newValue) {
-                          setState(() {
-                            passengers = newValue!;
-                          });
-                        },
-                        items:
-                            numPassengers.map<DropdownMenuItem<int>>((value) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text(value.toString()),
-                          );
-                        }).toList(),
-                      ),
+                    child: DropdownButton<int>(
+                      isExpanded: true,
+                      value: passengers,
+                      underline: Container(),
+                      icon: const Icon(Icons.arrow_downward),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          passengers = newValue!;
+                        });
+                      },
+                      items: numPassengers.map<DropdownMenuItem<int>>((value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -220,30 +216,10 @@ class _LocationPickerState extends State<LocationPicker> {
                             )
                           : null,
             ),
+            //REQUEST BUTTON
             Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 20),
-              child: TextButton(
-                //REQUEST BUTTON
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  decoration: BoxDecoration(
-                    color: Colors.red[100],
-                    border: Border.all(
-                      color: Colors.red.shade900,
-                      width: 4,
-                    ),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Text(
-                    'Request',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                      color: Colors.red.shade900,
-                    ),
-                  ),
-                ),
+              padding: const EdgeInsets.fromLTRB(40, 15, 40, 20),
+              child: ElevatedButton(
                 onPressed: () async {
                   loading = true;
                   setState(() {});
@@ -274,6 +250,25 @@ class _LocationPickerState extends State<LocationPicker> {
                   loading = false;
                   setState(() {});
                 },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Request',
+                          style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red.shade700)),
+                    ],
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      side: BorderSide(width: 4, color: Colors.red.shade400),
+                    ),
+                    primary: Colors.red.shade100),
               ),
             ),
           ],

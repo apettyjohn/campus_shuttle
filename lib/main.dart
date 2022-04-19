@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Login',
+      debugShowCheckedModeBanner: false,
       routes: {
         '/admin': (context) => const AdminPage(),
         '/login': (context) => const LoginPage(serverOn: serverOn),
@@ -31,7 +32,9 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
           primarySwatch: Colors.red,
-          textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Lora')),
+          textTheme: Theme.of(context)
+              .textTheme
+              .apply(fontFamily: 'Lora', bodyColor: Colors.black)),
       home: const LoginPage(serverOn: serverOn),
     );
   }

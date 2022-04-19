@@ -20,6 +20,7 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     if (ModalRoute.of(context)!.settings.arguments == null) {
       return ElevatedButton(
           onPressed: () {
@@ -44,18 +45,15 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                   child: Image.asset('assets/images/cuaLogo.png'),
                 ),
               ),
-              const Text(
-                'Campus Shuttle',
-                style: TextStyle(
-                  fontSize: 26,
-                ),
-              ),
+              width > 400
+                  ? const Text('Campus Shuttle', style: TextStyle(fontSize: 26))
+                  : const Text('Shuttle', style: TextStyle(fontSize: 26)),
             ],
           ),
         ),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          double width = constraints.maxWidth;
+          width = constraints.maxWidth;
           double padding = 10;
           width > 500
               ? padding = 50

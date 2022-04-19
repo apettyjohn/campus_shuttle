@@ -1,15 +1,17 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class GMap extends StatefulWidget {
-  const GMap({Key? key}) : super(key: key);
+class AndroidGMap extends StatefulWidget {
+  const AndroidGMap({Key? key}) : super(key: key);
 
   @override
-  _GMapState createState() => _GMapState();
+  _AndroidGMapState createState() => _AndroidGMapState();
 }
 
-class _GMapState extends State<GMap> {
+class _AndroidGMapState extends State<AndroidGMap> {
   final Completer<GoogleMapController> _controller = Completer();
 
   static const LatLng _center = LatLng(45.521563, -122.677433);

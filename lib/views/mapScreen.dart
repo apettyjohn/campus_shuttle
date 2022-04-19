@@ -1,6 +1,9 @@
-import 'package:campus_shuttle/widgets/map/map.dart';
+// ignore_for_file: file_names
+
+import 'package:campus_shuttle/widgets/map/androidMap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+//import 'package:campus_shuttle/widgets/map/webMap.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     if (ModalRoute.of(context)!.settings.arguments == null) {
       return ElevatedButton(
           onPressed: () {
@@ -36,12 +40,9 @@ class _MapScreenState extends State<MapScreen> {
                   child: Image.asset('assets/images/cuaLogo.png'),
                 ),
               ),
-              const Text(
-                'Campus Shuttle',
-                style: TextStyle(
-                  fontSize: 26,
-                ),
-              ),
+              width > 400
+                  ? const Text('Campus Shuttle', style: TextStyle(fontSize: 26))
+                  : const Text('Shuttle', style: TextStyle(fontSize: 26)),
             ],
           ),
         ),
@@ -72,7 +73,7 @@ class _MapScreenState extends State<MapScreen> {
                   SizedBox(
                     height: 500,
                     child: defaultTargetPlatform == TargetPlatform.android
-                        ? const GMap()
+                        ? const AndroidGMap()
                         : Image.asset("assets/images/staticMap.png"),
                   )
                 ],

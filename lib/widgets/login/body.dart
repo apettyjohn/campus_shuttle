@@ -31,7 +31,6 @@ class _LoginBoxState extends State<LoginBox> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     serverOn = widget.serverOn;
     return Container(
       decoration: BoxDecoration(
@@ -159,19 +158,31 @@ class _LoginBoxState extends State<LoginBox> {
                         style: TextStyle(fontSize: 18),
                       ))),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CheckboxWText(role: "Driver", setstate: callback),
-                  width > 400
-                      ? const SizedBox(width: 50)
-                      : const SizedBox(width: 10),
-                  CheckboxWText(role: "Admin", setstate: callback)
-                ],
-              ),
-            ),
+            LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              double width = constraints.maxWidth;
+              return Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: width > 250
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CheckboxWText(role: "Driver", setstate: callback),
+                          width > 400
+                              ? const SizedBox(width: 50)
+                              : const SizedBox(width: 10),
+                          CheckboxWText(role: "Admin", setstate: callback)
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CheckboxWText(role: "Driver", setstate: callback),
+                          CheckboxWText(role: "Admin", setstate: callback)
+                        ],
+                      ),
+              );
+            }),
           ],
         ),
       ),
