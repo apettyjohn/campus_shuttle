@@ -38,25 +38,32 @@ class _LoginMenuState extends State<LoginMenu> {
                 ),
               ),
             ),
-            TextButton(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  'Report a problem',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Report a problem',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red.shade700)),
+                    ],
                   ),
                 ),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      side: BorderSide(width: 4, color: Colors.red.shade500),
+                    ),
+                    primary: Colors.red.shade100),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
             ),
           ],
         ),

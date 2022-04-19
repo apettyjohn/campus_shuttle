@@ -54,18 +54,34 @@ class _MapScreenState extends State<MapScreen> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Navigate back to first route when tapped.
-                      Navigator.pushNamed(context, '/requestStatus',
-                          arguments: args);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Go back to status page',
-                        style: TextStyle(fontSize: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        // Navigate back to first route when tapped.
+                        Navigator.pushNamed(context, '/requestStatus',
+                            arguments: args);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Go Back to Status Page',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red.shade700)),
+                          ],
+                        ),
                       ),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40),
+                            side: BorderSide(
+                                width: 3, color: Colors.red.shade500),
+                          ),
+                          primary: Colors.red.shade100),
                     ),
                   ),
                   Padding(

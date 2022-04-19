@@ -72,7 +72,13 @@ class _LoginBoxState extends State<LoginBox> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: loading ||
+                      loginError ||
+                      serverError ||
+                      driverError ||
+                      adminError
+                  ? const EdgeInsets.symmetric(vertical: 10)
+                  : EdgeInsets.zero,
               child: loading
                   ? const CircularProgressIndicator()
                   : loginError
@@ -99,7 +105,11 @@ class _LoginBoxState extends State<LoginBox> {
               padding: const EdgeInsets.only(top: 15),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(20)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                        side: BorderSide(width: 4, color: Colors.red.shade500),
+                      ),
+                      primary: Colors.red.shade100),
                   onPressed: () async {
                     if (serverOn) {
                       loading = true;
@@ -151,12 +161,19 @@ class _LoginBoxState extends State<LoginBox> {
                       }
                     }
                   },
-                  child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(fontSize: 18),
-                      ))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Submit',
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red.shade700)),
+                      ],
+                    ),
+                  )),
             ),
             LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {

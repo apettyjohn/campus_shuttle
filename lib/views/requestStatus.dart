@@ -1,5 +1,8 @@
 // ignore_for_file: file_names
 
+import 'dart:convert';
+
+import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_shuttle/widgets/requestRide/waitTimeBox.dart';
 import 'package:campus_shuttle/widgets/requestStatus/cancelDialogue.dart';
@@ -16,7 +19,28 @@ class RequestStatusPage extends StatefulWidget {
 
 class _RequestStatusPageState extends State<RequestStatusPage> {
   final bool serverOn;
+  int queue = -1;
+  Map ride = {};
+  bool initialized = false;
   _RequestStatusPageState({required this.serverOn});
+
+  Future<void> getQueue(Map ride) async {
+    final response = await postRequest('queue', ride).then((value) => value);
+    if (response.statusCode == 200) {
+      var position = jsonDecode(response.body)['queue'];
+      queue = position;
+    } else {
+      queue = -1;
+    }
+    if (!initialized) {
+      initialized = true;
+      setState(() {});
+    }
+  }
+
+  void callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +53,8 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
           child: const Text("Return to login"));
     } else {
       var args = ModalRoute.of(context)!.settings.arguments as Map;
+      ride = args['ride'];
+      getQueue(ride);
       return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
@@ -120,66 +146,42 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                               ],
                             ),
                           ),
+                          // Map button
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                              ), //REQUEST BUTTON
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.green[100],
-                                  border: Border.all(
-                                    color: Colors.green.shade900,
-                                    width: 4,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: const Text(
-                                  'View Map',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 25, horizontal: 50),
+                            child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pushNamed(context, '/map',
                                     arguments: args);
                               },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                              ), //REQUEST BUTTON
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.red[100],
-                                  border: Border.all(
-                                    color: Colors.red.shade900,
-                                    width: 4,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: const Text(
-                                  'Cancel Ride',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                    color: Colors.red,
-                                  ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('View Map',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green.shade700)),
+                                  ],
                                 ),
                               ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40),
+                                    side: BorderSide(
+                                        width: 3, color: Colors.green.shade500),
+                                  ),
+                                  primary: Colors.green.shade100),
+                            ),
+                          ),
+                          // Cancel Button
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(50, 0, 50, 20),
+                            child: ElevatedButton(
                               onPressed: () {
                                 showDialog(
                                     context: context,
@@ -187,15 +189,39 @@ class _RequestStatusPageState extends State<RequestStatusPage> {
                                         ConfirmCancel(
                                             args: args, serverOn: serverOn));
                               },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Cancel Ride',
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red.shade700)),
+                                  ],
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40),
+                                    side: BorderSide(
+                                        width: 4, color: Colors.red.shade500),
+                                  ),
+                                  primary: Colors.red.shade100),
                             ),
                           ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: WaitTimeBox(serverOn: serverOn),
-                    )
+                        padding: const EdgeInsets.only(top: 15),
+                        child: WaitTimeBox(
+                            serverOn: serverOn,
+                            allElements: true,
+                            index: queue,
+                            callback: callback))
                   ],
                 ),
               ),

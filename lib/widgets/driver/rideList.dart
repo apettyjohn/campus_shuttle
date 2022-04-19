@@ -53,36 +53,32 @@ class Ride extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 2),
-          borderRadius: BorderRadius.circular(10)),
-      child: TextButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return serverOn
-                    ? ViewRide(
-                        serverOn: serverOn,
-                        pickup: pickup,
-                        dropoff: dropoff,
-                        passenger: passenger,
-                        index: index,
-                        args: args,
-                      )
-                    : ViewRide(
-                        serverOn: serverOn,
-                        pickup: pickup,
-                        dropoff: dropoff,
-                        passenger: passenger,
-                        index: index,
-                        args: args,
-                      );
-              });
-        },
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return serverOn
+                  ? ViewRide(
+                      serverOn: serverOn,
+                      pickup: pickup,
+                      dropoff: dropoff,
+                      passenger: passenger,
+                      index: index,
+                      args: args,
+                    )
+                  : ViewRide(
+                      serverOn: serverOn,
+                      pickup: pickup,
+                      dropoff: dropoff,
+                      passenger: passenger,
+                      index: index,
+                      args: args,
+                    );
+            });
+      },
+      child: SizedBox(
+        height: 70,
         child: LayoutBuilder(builder: (context, constraints) {
           return Row(
             children: [
@@ -166,6 +162,12 @@ class Ride extends StatelessWidget {
           );
         }),
       ),
+      style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(width: 2, color: Colors.black),
+          ),
+          primary: Colors.white),
     );
   }
 }

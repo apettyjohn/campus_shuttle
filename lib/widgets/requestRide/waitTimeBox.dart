@@ -4,41 +4,54 @@ import 'package:campus_shuttle/databaseFunctions.dart';
 import 'package:flutter/material.dart';
 
 class WaitTimeBox extends StatefulWidget {
-  final bool? helpText;
-  final bool? allElements;
-  final int? index;
   final bool serverOn;
+  final bool allElements;
+  final int index;
+  final bool? helpText;
+  final Function? callback;
   const WaitTimeBox(
       {Key? key,
       required this.serverOn,
+      required this.allElements,
+      required this.index,
       this.helpText,
-      this.allElements,
-      this.index})
+      this.callback})
       : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  State<WaitTimeBox> createState() => _WaitTimeBoxState(serverOn: serverOn);
+  State<WaitTimeBox> createState() => _WaitTimeBoxState(
+      serverOn: serverOn, allElements: allElements, index: index);
 }
 
 class _WaitTimeBoxState extends State<WaitTimeBox> {
-  bool helpText = false;
-  bool allElements = true;
-  int index = -1;
-  var waitTime = 0;
   bool serverOn;
+  bool allElements;
+  int index;
+  bool helpText = false;
+  Function? callback;
+  var waitTime = 0;
 
-  _WaitTimeBoxState({required this.serverOn});
+  _WaitTimeBoxState(
+      {required this.serverOn, required this.allElements, required this.index});
 
   // update waitTime
   Future<void> waitTimeWrapper() async {
     if (serverOn) {
       if (allElements) {
-        waitTime = await getFullWaitTime();
+        if (index < 0) {
+          waitTime = await getFullWaitTime();
+        } else {
+          waitTime = await getTimeToRide(index);
+        }
       } else if (index >= 0) {
         waitTime = await getWaitTime(index);
       } else {
         waitTime = await getWaitTime(0);
+      }
+      if (callback != null) {
+        //print('Refreshing parent');
+        callback!();
       }
       setState(() {});
     }
@@ -55,11 +68,8 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
     if (widget.helpText != null) {
       helpText = widget.helpText!;
     }
-    if (widget.index != null) {
-      index = widget.index!;
-    }
-    if (widget.allElements != null) {
-      allElements = widget.allElements!;
+    if (widget.callback != null) {
+      callback = widget.callback!;
     }
     return Container(
       decoration: BoxDecoration(
@@ -80,16 +90,14 @@ class _WaitTimeBoxState extends State<WaitTimeBox> {
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: index >= 0
-                        ? const Text('Drive Time:',
+                    child: allElements
+                        ? const Text('Estimated Wait Time:',
                             style: TextStyle(fontSize: 28))
-                        : const Text(
-                            'Estimated Wait Time:',
-                            style: TextStyle(fontSize: 28),
-                          ),
+                        : const Text('Drive Time:',
+                            style: TextStyle(fontSize: 28)),
                   ),
                 ),
-                index < 0
+                allElements
                     ? IconButton(
                         onPressed: () {
                           waitTimeWrapper();

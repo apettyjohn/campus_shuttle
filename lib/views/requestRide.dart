@@ -114,7 +114,11 @@ class _RequestRidePageState extends State<RequestRidePage> {
                       // Wait time box
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
-                        child: WaitTimeBox(helpText: true, serverOn: serverOn),
+                        child: WaitTimeBox(
+                            helpText: true,
+                            serverOn: serverOn,
+                            allElements: true,
+                            index: -1),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(top: 15),

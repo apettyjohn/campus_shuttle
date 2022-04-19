@@ -55,6 +55,25 @@ Future<int> getWaitTime(int i) async {
   }
 }
 
+Future<int> getTimeToRide(int i) async {
+  var response = await getRequest('waitTime');
+  if (response.statusCode == 200) {
+    var body = await jsonDecode(response.body);
+    var list = body['times'] as List;
+    int totalTime = 0;
+    for (var j = 0; j < list.length; j++) {
+      if (j <= i) {
+        totalTime += list[j] as int;
+      } else {
+        break;
+      }
+    }
+    return totalTime;
+  } else {
+    return -1;
+  }
+}
+
 Future<int> getFullWaitTime() async {
   var response = await getRequest('waitTime');
   if (response.statusCode == 200) {

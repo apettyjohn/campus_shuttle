@@ -30,32 +30,7 @@ class AdminPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    // Navigate back to first route when tapped.
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Go back to Login page',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      body: Container(),
     );
   }
 }

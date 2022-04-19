@@ -17,7 +17,6 @@ class ConfirmCancel extends StatefulWidget {
 
 class _ConfirmCancelState extends State<ConfirmCancel> {
   bool loading = false;
-  bool requestError = false;
   bool serverOn;
 
   _ConfirmCancelState({required this.serverOn});
@@ -54,61 +53,48 @@ class _ConfirmCancelState extends State<ConfirmCancel> {
                 ),
               ),
             ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              ),
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 50, right: 50, top: 8, bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  border: Border.all(
-                    color: Colors.red.shade900,
-                    width: 4,
-                  ),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color: Colors.red.shade900,
-                  ),
-                ),
-              ),
-              onPressed: () async {
-                loading = true;
-                setState(() {});
-                if (serverOn) {
-                  var response = await postRequest(
-                      'rides', {"method": "delete", "ride": ride});
-                  if (response.statusCode == 202) {
-                    requestError = false;
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+              child: ElevatedButton(
+                onPressed: () async {
+                  loading = true;
+                  setState(() {});
+                  if (serverOn) {
+                    await postRequest(
+                        'rides', {"method": "delete", "ride": ride});
                     Navigator.pushNamed(context, '/requestRide',
                         arguments: person);
                   } else {
-                    requestError = true;
+                    Navigator.pushNamed(context, '/requestRide',
+                        arguments: person);
                   }
-                } else {
-                  Navigator.pushNamed(context, '/requestRide',
-                      arguments: person);
-                }
-                loading = false;
-                setState(() {});
-              },
+                  loading = false;
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Cancel',
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red.shade700)),
+                    ],
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      side: BorderSide(width: 4, color: Colors.red.shade500),
+                    ),
+                    primary: Colors.red.shade100),
+              ),
             ),
             Container(
               padding: const EdgeInsets.only(top: 15),
-              child: loading
-                  ? const CircularProgressIndicator()
-                  : requestError
-                      ? const Text(
-                          'Error',
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : null,
+              child: loading ? const CircularProgressIndicator() : null,
             ),
           ],
         ),
