@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Login',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/admin': (context) => const AdminPage(),
+        '/admin': (context) => const AdminPage(serverOn: serverOn),
         '/login': (context) => const LoginPage(serverOn: serverOn),
         '/map': (context) => const MapScreen(),
         '/driver': (context) => const DriverPage(serverOn: serverOn),

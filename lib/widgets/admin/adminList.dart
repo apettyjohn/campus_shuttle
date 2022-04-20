@@ -2,21 +2,21 @@
 
 import 'package:flutter/material.dart';
 
-class DriverList extends StatefulWidget {
+class AdminList extends StatefulWidget {
   final bool serverOn;
   final Map args;
-  const DriverList({Key? key, required this.serverOn, required this.args})
+  const AdminList({Key? key, required this.serverOn, required this.args})
       : super(key: key);
 
   @override
-  State<DriverList> createState() => _DriverListState();
+  State<AdminList> createState() => _AdminListState();
 }
 
-class _DriverListState extends State<DriverList> {
+class _AdminListState extends State<AdminList> {
   @override
   Widget build(BuildContext context) {
     final Map args = widget.args;
-    final List people = args['drivers'];
+    final List people = args['admins'];
     return ListView.builder(
       shrinkWrap: true,
       itemCount: people.length,
@@ -44,7 +44,7 @@ class _DriverListState extends State<DriverList> {
           ),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Driver(
+            child: Admin(
               serverOn: widget.serverOn,
               name: person["name"],
               email: person["email"],
@@ -57,13 +57,13 @@ class _DriverListState extends State<DriverList> {
   }
 }
 
-class Driver extends StatefulWidget {
+class Admin extends StatefulWidget {
   final bool serverOn;
   final String name;
   final String email;
   final Map args;
 
-  const Driver(
+  const Admin(
       {Key? key,
       required this.serverOn,
       required this.name,
@@ -72,10 +72,10 @@ class Driver extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Driver> createState() => _DriverState();
+  State<Admin> createState() => _AdminState();
 }
 
-class _DriverState extends State<Driver> {
+class _AdminState extends State<Admin> {
   bool clicked = false;
 
   @override
@@ -131,10 +131,10 @@ class _DriverState extends State<Driver> {
                     padding: EdgeInsets.zero,
                     onPressed: () {
                       var params = widget.args;
-                      int i = params['drivers'].indexWhere(((person) =>
+                      int i = params['admins'].indexWhere(((person) =>
                           person["email"] == widget.email &&
                           person['name'] == widget.name));
-                      params['drivers'].removeAt(i);
+                      params['admins'].removeAt(i);
                       Navigator.pushNamed(context, '/admin', arguments: params);
                     },
                     icon: Icon(
