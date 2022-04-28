@@ -21,9 +21,10 @@ class _LoginBoxState extends State<LoginBox> {
   bool serverError = false;
   bool loginError = false;
   bool loading = false;
-  String name = '', email = '';
+  String name = '', email = '', password = '';
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void callback() {
     setState(() {});
@@ -71,6 +72,23 @@ class _LoginBoxState extends State<LoginBox> {
                     border: OutlineInputBorder(), labelText: "Email"),
               ),
             ),
+            Padding(
+                padding: driverCheckBox || adminCheckBox
+                    ? const EdgeInsets.symmetric(vertical: 10)
+                    : EdgeInsets.zero,
+                child: driverCheckBox || adminCheckBox
+                    ? TextField(
+                        controller: _passwordController,
+                        onChanged: (String value) {
+                          setState(() {
+                            password = value;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Password"),
+                      )
+                    : Container()),
             Padding(
               padding: loading ||
                       loginError ||

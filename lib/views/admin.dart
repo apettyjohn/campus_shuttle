@@ -10,10 +10,6 @@ const testList1 = [
   {"name": "Mary Galvin", "email": "galvinma@cua.edu"},
   {"name": "Cheima Aouati", "email": "aouati@cua.edu"}
 ];
-const testList2 = [
-  {"name": "Adam Pettyjohn", "email": "pettyjohn@cua.edu"},
-  {"name": "Ben Riesett", "email": "riesett@cua.edu"},
-];
 String name1 = "", name2 = "", email1 = "", email2 = "";
 
 class AdminPage extends StatefulWidget {
@@ -31,7 +27,7 @@ class _AdminPageState extends State<AdminPage> {
   Map args = {
     "name": "name",
     "email": "email",
-    "drivers": [...testList2],
+    "drivers": [...testList1.sublist(0, 2)],
     "admins": [...testList1]
   };
 
@@ -39,100 +35,108 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double padding = 25;
-    Map params = ModalRoute.of(context)!.settings.arguments as Map;
-    // Expecting {"name":String,"email":email,"drivers":[],"admins":[]}
-    if (params['drivers'] != null && params['admins'] != null) {
-      if (params['drivers'] != args['drivers'] ||
-          params['admins'] != args['admins']) {
-        args = params;
+    if (ModalRoute.of(context)!.settings.arguments == null) {
+      return ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/login');
+          },
+          child: const Text("Return to login"));
+    } else {
+      Map params = ModalRoute.of(context)!.settings.arguments as Map;
+      // Expecting {"name":String,"email":email,"drivers":[],"admins":[]}
+      if (params['drivers'] != null) {
+        args['drivers'] = params['drivers'];
       }
-    }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: BackButton(onPressed: () {
-          Navigator.pushNamed(context, '/login');
-        }),
-        toolbarHeight: 70,
-        backgroundColor: Colors.red[900],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: SizedBox(
-                height: 50,
-                child: Image.asset('assets/images/cuaLogo.png'),
+      if (params['admins'] != null) {
+        args['admins'] = params['admins'];
+      }
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: BackButton(onPressed: () {
+            Navigator.pushNamed(context, '/login');
+          }),
+          toolbarHeight: 70,
+          backgroundColor: Colors.red[900],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: SizedBox(
+                  height: 50,
+                  child: Image.asset('assets/images/cuaLogo.png'),
+                ),
               ),
-            ),
-            width > 400
-                ? const Text('Campus Shuttle', style: TextStyle(fontSize: 26))
-                : const Text('Shuttle', style: TextStyle(fontSize: 26)),
-          ],
+              width > 400
+                  ? const Text('Campus Shuttle', style: TextStyle(fontSize: 26))
+                  : const Text('Shuttle', style: TextStyle(fontSize: 26)),
+            ],
+          ),
         ),
-      ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        SizedBox(width: padding),
-                        const Text("Drivers", style: TextStyle(fontSize: 30)),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            setState(() {
-                              addDriver = !addDriver;
-                            });
-                          },
-                        ),
-                      ],
+        body: Container(
+          alignment: Alignment.topCenter,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: padding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(width: padding),
+                          const Text("Drivers", style: TextStyle(fontSize: 30)),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                addDriver = !addDriver;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  addDriver
-                      ? AddItemRow(type: 'driver', args: args)
-                      : Container(),
-                  DriverList(serverOn: widget.serverOn, args: args),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: Row(
-                      children: [
-                        SizedBox(width: padding),
-                        const Text("Administrators",
-                            style: TextStyle(fontSize: 30)),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            setState(() {
-                              addAdmin = !addAdmin;
-                            });
-                          },
-                        ),
-                      ],
+                    addDriver
+                        ? AddItemRow(type: 'driver', args: args)
+                        : Container(),
+                    DriverList(serverOn: widget.serverOn, args: args),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(width: padding),
+                          const Text("Administrators",
+                              style: TextStyle(fontSize: 30)),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                addAdmin = !addAdmin;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  addAdmin
-                      ? AddItemRow(type: "admin", args: args)
-                      : Container(),
-                  AdminList(serverOn: widget.serverOn, args: args)
-                ],
+                    addAdmin
+                        ? AddItemRow(type: "admin", args: args)
+                        : Container(),
+                    AdminList(serverOn: widget.serverOn, args: args)
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
 
